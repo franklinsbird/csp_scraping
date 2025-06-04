@@ -1,4 +1,4 @@
-# simple_nsr_scraper.py
+# camp_scraper.py
 
 import requests
 from lxml import html
@@ -60,14 +60,14 @@ def fill_columns(camp):
             # 2. Use Geocoding API to get lat/lng based on organiser name
             # get_lat_long(camp)
 
-            # 3. Look for dates, ages, prices by parsing info to LLaMA
+            # 3. Look for dates, ages, and prices using the LLM (OpenRouter)
             addl_camps = get_llm_data(res, camp)
 
         else:
             camp["Page Load?"] = "No Link"
             camp["Lat"] = camp["Long"] = camp["start_date"] = camp["end_date"] = ""
     except Exception as e:
-        camp["Page Load"] = f"Error: {e}"
+        camp["Page Load?"] = f"Error: {e}"
         camp["Lat"] = camp["Long"] = camp["start_date"] = camp["end_date"] = ""
     time.sleep(1)  # Avoid hammering servers
 
