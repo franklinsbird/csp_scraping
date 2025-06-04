@@ -59,7 +59,7 @@ def fill_columns(camp):
             # 2. Use Geocoding API to get lat/lng based on organiser name
             # get_lat_long(camp)
 
-            # 3. Look for dates, ages, prices by parsing info to LLaMA
+            # 3. Look for dates, ages, and prices using the LLM (OpenRouter)
             addl_camps = get_llm_data(res, camp)
 
         else:
