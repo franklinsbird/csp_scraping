@@ -3,7 +3,7 @@
 I'm compiling data from a number of different sites to help put together an application on college soccer recruiting. The result will be up-to-date data on both men's and women's college universities, coaches, camps, and scholarships.
 
 ## Files:
-`camp_scraper.py` - This file scrapes data from:
+`nsr_inc_scraper.py` - This file scrapes data from:
 - https://www.nsr-inc.com/sport/soccer/mens-college-soccer-camps.php (mens)
 - https://www.nsr-inc.com/sport/soccer/womens-college-soccer-camps.php (womens)
 
