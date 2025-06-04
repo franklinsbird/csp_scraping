@@ -13,6 +13,7 @@ import re
 from bs4 import BeautifulSoup
 import json
 import copy
+import os
 
 # CONFIG
 URLS = [
@@ -32,6 +33,7 @@ sheet = client.open_by_key(SHEET_ID).worksheet(TAB_NAME)
 
 # Load GMaps Config
 GOOGLE_API_KEY = "AIzaSyBOUjqc42Rd38abVDRzYdbUrlxhJo_9SyI"  # Replace with your real API key
+# GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 gmaps = GoogleMaps(key=GOOGLE_API_KEY)
 
 def fill_columns(camp):
@@ -109,6 +111,7 @@ def get_llm_data(res, camp):
 
     # Call OpenRouter API to extract structured info
     OPENROUTER_API_KEY = "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"
+    # OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
     prompt = f"""
     You are a structured data extractor. From the following text, extract ONLY the values below and return them in strict JSON format. You are looking for
     information about soccer camps, including the event name, start and end dates, ages, and cost. Only extract data if you
