@@ -38,6 +38,8 @@ def fill_columns(camp):
 
     # 1. Ensure the camp link loads
     try:
+        addl_camps = []
+        
         if camp["Camp Info URL"]:
             
             # Parse the URL with headers
@@ -46,28 +48,29 @@ def fill_columns(camp):
             
             # Ensure the page loads
             if res.status_code == 200:
-                camp["Page Load"] = "OK"
+                camp["Page Load?"] = "OK"
             else:
-                camp["Page Load"] = f"Error {res.status_code}"
+                camp["Page Load?"] = f"Error {res.status_code}"
                 print(f"❌ Error {res.status_code} on URL: {camp['Camp Info URL']}")
+                return addl_camps
             content = res.text.lower()
             print("Retrieving data for URL", camp["Camp Info URL"])
 
             # 2. Use Geocoding API to get lat/lng based on organiser name
-            get_lat_long(camp)
+            # get_lat_long(camp)
 
             # 3. Look for dates, ages, prices by parsing info to LLaMA
-            get_llm_data(res, camp)
+            addl_camps = get_llm_data(res, camp)
 
         else:
-            camp["Page Load"] = "No Link"
-            camp["Lat"] = camp["Long"] = camp["Start Date"] = camp["End Date"] = ""
+            camp["Page Load?"] = "No Link"
+            camp["Lat"] = camp["Long"] = camp["start_date"] = camp["end_date"] = ""
     except Exception as e:
         camp["Page Load"] = f"Error: {e}"
-        camp["Lat"] = camp["Long"] = camp["Start Date"] = camp["End Date"] = ""
+        camp["Lat"] = camp["Long"] = camp["start_date"] = camp["end_date"] = ""
     time.sleep(1)  # Avoid hammering servers
 
-    return camp
+    return addl_camps
 
 def get_lat_long(camp):
     try:
@@ -107,8 +110,13 @@ def get_llm_data(res, camp):
     # Call OpenRouter API to extract structured info
     OPENROUTER_API_KEY = "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"
     prompt = f"""
-    You are a structured data extractor. From the following text, extract ONLY the values below and return them in strict JSON format. 
-    You may encounter data on multiple camps. If this is the case, return several JSON objects in an array. THey may often be contained in an HTML table format.
+    You are a structured data extractor. From the following text, extract ONLY the values below and return them in strict JSON format. You are looking for
+    information about soccer camps, including the event name, start and end dates, ages, and cost. Only extract data if you
+    are confident there is a soccer camp occurring in the near future. Do not return data just because you see the word soccer.
+    There should be at least the word camp and probably a start date of some kind to represent a valid camp. 
+    If you are not confident, return an empty string for all fields. The text may contain various formats of dates. 
+    You may encounter data on multiple camps. If this is the case, return several JSON objects in an array. They may often be contained in an HTML table format.
+    If you find a start_date but no end_date, assume the end_date is the same as the start_date.
 
     Fields:
     - event_name
@@ -124,6 +132,8 @@ def get_llm_data(res, camp):
 
     Return only this format:
     {{"event_name":"", "start_date": "", "end_date": "", "ages": "", "cost": ""}}
+    
+    Even if the text does not contain all fields, return an empty string for those fields. Do not return any other text or explanation, just the JSON.
     """
 
     headers_llm = {
@@ -131,7 +141,7 @@ def get_llm_data(res, camp):
         "Content-Type": "application/json"
     }
     payload = {
-       "model": "meta-llama/llama-3.3-8b-instruct:free",
+       "model": "google/gemma-3n-e4b-it:free",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2
     }
@@ -141,7 +151,7 @@ def get_llm_data(res, camp):
     try:
         llm_resp = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers_llm, data=json.dumps(payload))
         llm_json = llm_resp.json()
-        # print("🔍 LLM JSON:", llm_json)
+        #print("🔍 LLM JSON:", llm_json)
         if "choices" in llm_json and llm_json["choices"]:
             llm_output = llm_json["choices"][0]["message"]["content"]
         else:
@@ -151,7 +161,6 @@ def get_llm_data(res, camp):
         if llm_output.startswith("```"):
             llm_output = llm_output.strip("`").strip()
 
-        print("🚨 Raw llm_output:", repr(llm_output))
         json_start = llm_output.find('[')
         if json_start == -1:
             raise ValueError("No '[' found in LLM output")
@@ -165,88 +174,70 @@ def get_llm_data(res, camp):
             print("❌ Still malformed JSON:", e)
             print("🚨 Partial content:", json_snippet[:500])
         try:
-            parsed = json.loads(llm_output)
-
-            if isinstance(parsed, list):
-                for j, camp_obj in enumerate(parsed):
-                    print("Camp", j, camp_obj.get("event_name"))
-                    if j == 0:
-                        # Overwrite current camp row with first entry
-                        camp.update({
-                            "Event Details": camp_obj.get("event_name", camp.get("Event Details")),
-                            "start_date": camp_obj.get("start_date", ""),
-                            "end_date": camp_obj.get("end_date", ""),
-                            "Ages / Grade Level": camp_obj.get("ages", ""),
-                            "Cost": camp_obj.get("cost", "")
-                        })
-                    else:
-                        # Clone current camp and update with next event details
-                        new_camp = copy.deepcopy(camp)
-                        new_camp.update({
-                            "Event Details": camp_obj.get("event_name", camp.get("Event Details")),
-                            "start_date": camp_obj.get("start_date", ""),
-                            "end_date": camp_obj.get("end_date", ""),
-                            "Ages / Grade Level": camp_obj.get("ages", ""),
-                            "Cost": camp_obj.get("cost", "")
-                        })
-                        addl_camps.append(new_camp)
-            else:
-                # If it's a single object (not a list), update current camp
+            # If we got a list with at least one item, we can update the camp
+            if isinstance(parsed, list) and len(parsed) > 0:
+                camp["Camp Found?"] = "Yes"
                 camp.update({
-                    "Event Details": parsed.get("event_name", camp.get("Event Details")),
-                    "start_date": parsed.get("start_date", ""),
-                    "end_date": parsed.get("end_date", ""),
-                    "Ages / Grade Level": parsed.get("ages", ""),
-                    "Cost": parsed.get("cost", "")
+                    "Event Details": parsed[0].get("event_name", camp.get("Event Details")),
+                    "start_date": parsed[0].get("start_date", ""),
+                    "end_date": parsed[0].get("end_date", ""),
+                    "Ages / Grade Level": parsed[0].get("ages", ""),
+                    "Cost": parsed[0].get("cost", "")
                 })
-
-
-            json_start = llm_output.find('{')
-            json_end = llm_output.find('}', json_start) + 1
-
-            # If there are no brackets, there's no JSON object so make columns empty
-            # if json_start == -1:
-
-            parsed = json.loads(llm_output[json_start:json_end])
-            note = llm_output[json_end:].strip()
-            if note:
-              print("📌 LLM Note:", note)
+                # Update additional camps with valid data
+                for camp_obj in parsed[1:]:
+                    new_camp = copy.deepcopy(camp)
+                    new_camp.update({
+                        "Event Details": camp_obj.get("event_name", camp.get("Event Details")),
+                        "start_date": camp_obj.get("start_date", ""),
+                        "end_date": camp_obj.get("end_date", ""),
+                        "Ages / Grade Level": camp_obj.get("ages", ""),
+                        "Cost": camp_obj.get("cost", "")
+                    })
+                    addl_camps.append(new_camp)
+            else:
+                camp["Camp Found?"] = "No"
+                print("⚠️ No camps found in LLM output")
+                return
         except json.JSONDecodeError as e:
             print("❌ JSON decode error:", e)
-        camp["Event Details"] = parsed.get("event_name", "")
-        camp["start_date"] = parsed.get("start_date", "")
-        camp["end_date"] = parsed.get("end_date", "")
-        camp["Ages / Grade Level"] = parsed.get("ages", "")
-        camp["Cost"] = parsed.get("cost", "")
     except Exception as e:
         print("⚠️ LLM Parsing Error:", e)
         camp["start_date"] = camp["end_date"] = camp["Ages / Grade Level"] = camp["Cost"] = "LLM Error"
+    
+    return addl_camps
 
 # Main execution
-data = []
-for url in URLS:
-    gender = "Women" if "womens" in url else "Men"
-    res = requests.get(url)
-    tree = html.fromstring(res.content)
-    table = tree.xpath(XPATH)[0]
-    rows = table.xpath(".//tr")
-    num_camps_filled = 0
-    for row in rows:
-        if num_camps_filled <= 5:
+def setup():
+    data = []
+    for url in URLS:
+        camp_limit = None
+        gender = "Women" if "womens" in url else "Men"
+        res = requests.get(url)
+        tree = html.fromstring(res.content)
+        table = tree.xpath(XPATH)[0]
+        rows = table.xpath(".//tr")
+        num_camps_filled = 0
+        for i, row in enumerate(rows):
+            if camp_limit and num_camps_filled >= camp_limit:
+                break
             cells = row.xpath(".//td")
             if len(cells) == 2:
                 state = cells[0].text_content().strip()
                 camp_el = cells[1].xpath(".//a")
                 camp_host = cells[1].text_content().strip()
+                if camp_host.endswith("Camp"):
+                    camp_host = camp_host[:-len("Camp")].strip()
                 camp_link = camp_el[0].get("href") if camp_el else ""
                 camp = {
                     "ID": "",
+                    "Camp Found?": "",
                     "Event Details": "",
                     "Organiser": camp_host,
                     "Camp Type": "",
                     "Image": "",
                     "Camp Info URL": camp_link,
-                    "Page Load": "",
+                    "Page Load?": "",
                     "Lat": "",
                     "Long": "",
                     "start_date": "",
@@ -258,15 +249,89 @@ for url in URLS:
                     "Cost":"",
                     "Gender": gender
                 }
-                camp_filled = fill_columns(camp)
+                addl_camps = []
+                addl_camps = fill_columns(camp)
+                if camp["Page Load?"] != "OK":
+                    print(f"❌ Skipping camp due to page load error")
+                    continue
+                data.append(camp)
                 num_camps_filled += 1
-                data.append(camp_filled)
-        else:
-            break
+                if addl_camps:
+                    num_camps_filled += len(addl_camps)
+                    data.extend(addl_camps)
 
 # Make dataframe from data list
-df = pd.DataFrame(data)
-df = df.replace({pd.NA: "", float("inf"): "", float("-inf"): "", float("nan"): ""})
-df = df.fillna("")
-sheet.update([df.columns.tolist()] + df.values.tolist())
+# df = pd.DataFrame(data)
+# df = df.replace({pd.NA: "", float("inf"): "", float("-inf"): "", float("nan"): ""})
+# df = df.fillna("")
+# sheet.update([df.columns.tolist()] + df.values.tolist())
 
+# Load existing sheet data into a DataFrame
+existing_data = pd.DataFrame(sheet.get_all_records()).head(6)
+
+# Array to store rows with page load errors
+error_rows = []
+
+# Iterate through rows and update relevant columns
+for index, row in existing_data.iterrows():
+    camp = {
+        "Organiser": row["Organiser"],
+        "Camp Info URL": row["Camp Info URL"],
+        "Page Load?": row["Page Load?"],
+        "start_date": row["start_date"],
+        "end_date": row["end_date"],
+        "Ages / Grade Level": row["Ages / Grade Level"],
+        "Cost": row["Cost"]
+    }
+    addl_camps = fill_columns(camp)
+    if camp["Page Load?"] == "OK":
+        # Update the DataFrame with new values
+        existing_data.at[index, "start_date"] = camp["start_date"]
+        existing_data.at[index, "end_date"] = camp["end_date"]
+        existing_data.at[index, "Ages / Grade Level"] = camp["Ages / Grade Level"]
+        existing_data.at[index, "Cost"] = camp["Cost"]
+
+        # Check for duplicates before adding new camps
+        existing_camp_keys = set(
+            (row["Organiser"], row["Camp Info URL"], row["Event Details"], row["start_date"]) for _, row in existing_data.iterrows()
+        )
+
+        # Add additional camps as new rows directly below the current row
+        if addl_camps:
+            for new_camp in addl_camps:
+                new_camp_key = (new_camp["Organiser"], new_camp["Camp Info URL"], new_camp["Event Details"], new_camp["start_date"])
+                if new_camp_key not in existing_camp_keys:
+                    # Copy data from the existing row
+                    new_camp.update({
+                        "Lat": camp.get("Lat", ""),
+                        "Long": camp.get("Long", ""),
+                        "City": camp.get("City", ""),
+                        "State": camp.get("State", ""),
+                        "Gender": camp.get("Gender", "")
+                    })
+                    # Insert new rows directly below the current row
+                    existing_data = pd.concat(
+                        [existing_data.iloc[:index + 1], pd.DataFrame([new_camp]), existing_data.iloc[index + 1:]],
+                        ignore_index=True
+                    )
+                    existing_camp_keys.add(new_camp_key)
+    else:
+        # Add row to error_rows and mark for removal
+        error_rows.append(row)
+        existing_data.drop(index, inplace=True)
+
+# Write back updated rows to the original sheet
+existing_data = existing_data.replace({pd.NA: "", float("inf"): "", float("nan"): ""})
+existing_data = existing_data.fillna("")
+sheet.update([existing_data.columns.tolist()] + existing_data.values.tolist())
+
+# Write error rows to a new sheet tab
+if error_rows:
+    try:
+        error_sheet = client.open_by_key(SHEET_ID).worksheet("Page Load Errors")
+    except gspread.exceptions.WorksheetNotFound:
+        print("⚠️ Worksheet 'Page Load Errors' not found. Creating it...")
+        error_sheet = client.open_by_key(SHEET_ID).add_worksheet(title="Page Load Errors", rows=100, cols=20)
+
+    error_df = pd.DataFrame(error_rows)
+    error_sheet.update([error_df.columns.tolist()] + error_df.values.tolist())
