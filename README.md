@@ -13,9 +13,10 @@ These sites generally link to other university-specific sites that are both exte
 - https://www.ncsasports.org/mens-soccer/tournaments-camps-showcases (mens)
 - https://www.ncsasports.org/womens-soccer/tournaments-camps (womens)
 
-This project relies on a couple of API keys that must be provided via environment variables before running the scraper:
+This project relies on a few environment variables before running the scraper:
 
 * `GOOGLE_API_KEY` – Google Maps API key used for geocoding requests.
 * `OPENROUTER_API_KEY` – API key for OpenRouter used to extract structured data from pages.
+* `SHEET_ID` – ID of the Google Sheet where results are written.
 
-Ensure these variables are set in your environment so `camp_scraper.py` can access them.
+Ensure these variables are set in your environment so `camp_scraper.py` can access them. Authentication uses a service account key stored in `gcreds.json`. This file should be present locally but must **not** be committed to version control.
