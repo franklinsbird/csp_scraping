@@ -2,6 +2,8 @@ import os
 import requests
 import pandas as pd
 from lxml import html
+from bs4 import BeautifulSoup
+import re
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from geocode_utils import get_lat_long
@@ -50,18 +52,39 @@ def scrape_exact_sports():
         city = ""
         lat = ""
         lng = ""
+        ages = ""
+        cost = ""
+        address = ""
 
         if camp_url:
             try:
                 camp_resp = requests.get(camp_url, headers=HEADERS, timeout=10)
+                camp_resp.raise_for_status()
                 camp_tree = html.fromstring(camp_resp.content)
+
+                soup = BeautifulSoup(camp_resp.text, "html.parser")
+
+                text = soup.get_text("\n")
+
+                def find_pattern(patterns):
+                    for pat in patterns:
+                        m = re.search(pat, text, re.I)
+                        if m:
+                            return m.group(1).strip()
+                    return ""
+
+                ages = find_pattern([r"Ages?[:\-\s]*([\w\- ]+)", r"Age Range[:\-\s]*([\w\- ]+)"])
+                cost = find_pattern([r"(?:Cost|Price|Fee)[:\-\s]*([$\d.,]+)"])
+                address = find_pattern([r"Address[:\-\s]*([^\n]+)", r"Location[:\-\s]*([^\n]+)"])
+
                 loc_el = camp_tree.xpath("//div[contains(@class,'location')]//text()")
-                if loc_el:
-                    city = loc_el[0].strip()
+                if loc_el and not address:
+                    address = loc_el[0].strip()
             except Exception:
                 pass
 
-        lat, lng, geo_city = get_lat_long(f"{camp_name}, {state}")
+        geocode_query = address if address else f"{camp_name}, {state}"
+        lat, lng, geo_city = get_lat_long(geocode_query)
         if not city:
             city = geo_city
 
@@ -78,9 +101,10 @@ def scrape_exact_sports():
             "City": city,
             "State": state,
             "Grade Level": "",
-            "Ages": "",
+            "Ages": ages,
+            "Address": address,
             "Division": "",
-            "Cost": "",
+            "Cost": cost,
             "Gender": gender,
         })
 
