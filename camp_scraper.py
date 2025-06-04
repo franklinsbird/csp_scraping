@@ -1,4 +1,4 @@
-# simple_nsr_scraper.py
+# camp_scraper.py
 
 import requests
 from lxml import html
