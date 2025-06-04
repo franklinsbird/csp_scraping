@@ -8,7 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from urllib.parse import urlparse
 import time
 from datetime import datetime
-from googlemaps import Client as GoogleMaps
+from geocode_utils import get_lat_long
 import re
 from bs4 import BeautifulSoup
 import json
@@ -33,9 +33,8 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, scope)
 client = gspread.authorize(creds)
 sheet = client.open_by_key(SHEET_ID).worksheet(TAB_NAME)
 
-# Load GMaps Config
+# Load GMaps Config (used via geocode_utils)
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-gmaps = GoogleMaps(key=GOOGLE_API_KEY)
 
 def fill_columns(camp):
 
@@ -60,7 +59,8 @@ def fill_columns(camp):
             print("Retrieving data for URL", camp["Camp Info URL"])
 
             # 2. Use Geocoding API to get lat/lng based on organiser name
-            # get_lat_long(camp)
+            lat, lng, city = get_lat_long(camp["Organiser"])
+            camp["Lat"], camp["Long"], camp["City"] = lat, lng, city
 
             # 3. Look for dates, ages, and prices using the LLM (OpenRouter)
             addl_camps = get_llm_data(res, camp)
@@ -75,24 +75,6 @@ def fill_columns(camp):
 
     return addl_camps
 
-def get_lat_long(camp):
-    try:
-        geo = gmaps.geocode(camp["Organiser"].strip())
-        if geo:
-            loc = geo[0]["geometry"]["location"]
-            city = ""
-            for component in geo[0]["address_components"]:
-                if "locality" in component["types"]:
-                    city = component["long_name"]
-                    break
-            camp["Lat"] = loc["lat"]
-            camp["Long"] = loc["lng"]
-            camp["City"] = city
-        else:
-            camp["Lat"] = ""
-            camp["Long"] = ""
-    except:
-        camp["Lat"] = camp["Long"] = "Geocode Error"
 
 def get_llm_data(res, camp):
     soup = BeautifulSoup(res.text, "html.parser")
