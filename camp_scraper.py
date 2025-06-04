@@ -68,7 +68,7 @@ def fill_columns(camp):
             camp["Page Load?"] = "No Link"
             camp["Lat"] = camp["Long"] = camp["start_date"] = camp["end_date"] = ""
     except Exception as e:
-        camp["Page Load"] = f"Error: {e}"
+        camp["Page Load?"] = f"Error: {e}"
         camp["Lat"] = camp["Long"] = camp["start_date"] = camp["end_date"] = ""
     time.sleep(1)  # Avoid hammering servers
 
