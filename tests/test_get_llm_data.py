@@ -40,6 +40,7 @@ def load_get_llm_data(openrouter_response):
         "requests": DummyRequests(openrouter_response),
         "json": json,
         "copy": __import__("copy"),
+        "os": __import__("os"),
     }
     exec(code, namespace)
     return namespace["get_llm_data"]

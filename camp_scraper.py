@@ -21,7 +21,9 @@ URLS = [
     "https://www.nsr-inc.com/sport/soccer/mens-college-soccer-camps.php"
 ]
 XPATH = "/html/body/section/div/div/div/div[1]/table"
-SHEET_ID = "1sZPoX0x7zJ0QCgr9G-qpXmeIqugOr9xj5WaPiSl_avU"
+SHEET_ID = os.getenv("SHEET_ID")
+if not SHEET_ID:
+    raise EnvironmentError("SHEET_ID environment variable not set")
 TAB_NAME = "Camps"
 CREDS_FILE = "gcreds.json"
 
