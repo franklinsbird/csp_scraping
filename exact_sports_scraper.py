@@ -81,7 +81,6 @@ URLS = [
     "https://exactsports.com/events/3046/soccer/boys/x1-showcase-camp-sacramento-boys-07-2025",
     "https://exactsports.com/events/2916/soccer/girls/x1-showcase-camp-san-francisco-girls-06-2025",
     "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025",
-    "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025"
 ]
 GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
 COST_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div[2]/h1/span"
