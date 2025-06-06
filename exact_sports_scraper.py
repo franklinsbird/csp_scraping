@@ -1,16 +1,7 @@
 import os
-import requests
 import pandas as pd
-from lxml import html
-from bs4 import BeautifulSoup
-import re
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from geocode_utils import get_lat_long
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from playwright.sync_api import sync_playwright
 
 URL = "https://exactsports.com/soccer/#tve-jump-1896baece7f"
@@ -92,7 +83,6 @@ URLS = [
     "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025",
     "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025"
 ]
-XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
 GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
 COST_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div[2]/h1/span"
 ADDRESS_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
