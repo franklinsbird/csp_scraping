@@ -1,16 +1,7 @@
 import os
-import requests
 import pandas as pd
-from lxml import html
-from bs4 import BeautifulSoup
-import re
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from geocode_utils import get_lat_long
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from playwright.sync_api import sync_playwright
 
 URL = "https://exactsports.com/soccer/#tve-jump-1896baece7f"
@@ -90,9 +81,7 @@ URLS = [
     "https://exactsports.com/events/3046/soccer/boys/x1-showcase-camp-sacramento-boys-07-2025",
     "https://exactsports.com/events/2916/soccer/girls/x1-showcase-camp-san-francisco-girls-06-2025",
     "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025",
-    "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025"
 ]
-XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
 GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
 COST_XPATH = "//*[@id='registration-widget']/div[2]/div[2]/div[2]/h1/span"
 ADDRESS_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
@@ -130,25 +119,28 @@ def get_camp_data(url):
         pd.DataFrame: A DataFrame containing the camp data.
     """
     camp_data = {}
-    
+
     with sync_playwright() as p:
+        # Set a custom user agent to avoid request blocks and extend timeouts
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto(url, wait_until="networkidle")
-        print(page.content())
+        context = browser.new_context(user_agent=HEADERS["User-Agent"])
+        page = context.new_page()
 
-        # Wait for the camp data to load
-        page.wait_for_selector(f"xpath={OVERVIEW_TITLE_XPATH}", timeout=10000)
+        try:
+            page.goto(url, timeout=60_000, wait_until="networkidle")
+            # Wait for the camp data to load
+            page.wait_for_selector(f"xpath={ADDRESS_XPATH}", timeout=10_000)
 
-        print("Extracting data from:", url)
-
-        # Extract camp data
-        camp_data["url"] = url
-        camp_data["address"] = page.locator(f"xpath={ADDRESS_XPATH}").inner_text()
-        camp_data["grades"] = page.locator(f"xpath={GRADES_XPATH}").inner_text()
-        camp_data["cost"] = page.locator(f"xpath={COST_XPATH}").inner_text()
-
-        browser.close()
+            # Extract camp data
+            camp_data["url"] = url
+            camp_data["address"] = page.locator(f"xpath={ADDRESS_XPATH}").inner_text()
+            camp_data["grades"] = page.locator(f"xpath={GRADES_XPATH}").inner_text()
+            camp_data["cost"] = page.locator(f"xpath={COST_XPATH}").inner_text()
+        except Exception as e:
+            print(f"Error extracting {url}: {e}")
+            camp_data = {"url": url, "address": "", "grades": "", "cost": ""}
+        finally:
+            browser.close()
 
     return camp_data
 
@@ -192,11 +184,13 @@ def create_dataframe_and_write_to_csv(data, output_file):
         output_file (str): Path to the output CSV file.
     """
     # Create a DataFrame
-    df = pd.DataFrame(data, columns=["URL", "address", "grades", "cost"])
+    df = pd.DataFrame(data, columns=["url", "address", "grades", "cost"])
 
     # Write the DataFrame to a CSV file
     df.to_csv(output_file, index=False)
     print(f"DataFrame written to {output_file}")
+
+    return df
 
 def main():
     """
