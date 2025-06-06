@@ -118,22 +118,28 @@ def get_camp_data(url):
         pd.DataFrame: A DataFrame containing the camp data.
     """
     camp_data = {}
-    
+
     with sync_playwright() as p:
+        # Set a custom user agent to avoid request blocks and extend timeouts
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto(url)
+        context = browser.new_context(user_agent=HEADERS["User-Agent"])
+        page = context.new_page()
 
-        # Wait for the camp data to load
-        page.wait_for_selector(f"xpath={ADDRESS_XPATH}")
+        try:
+            page.goto(url, timeout=60_000, wait_until="networkidle")
+            # Wait for the camp data to load
+            page.wait_for_selector(f"xpath={ADDRESS_XPATH}", timeout=10_000)
 
-        # Extract camp data
-        camp_data["url"] = url
-        camp_data["address"] = page.locator(f"xpath={ADDRESS_XPATH}").inner_text()
-        camp_data["grades"] = page.locator(f"xpath={GRADES_XPATH}").inner_text()
-        camp_data["cost"] = page.locator(f"xpath={COST_XPATH}").inner_text()
-
-        browser.close()
+            # Extract camp data
+            camp_data["url"] = url
+            camp_data["address"] = page.locator(f"xpath={ADDRESS_XPATH}").inner_text()
+            camp_data["grades"] = page.locator(f"xpath={GRADES_XPATH}").inner_text()
+            camp_data["cost"] = page.locator(f"xpath={COST_XPATH}").inner_text()
+        except Exception as e:
+            print(f"Error extracting {url}: {e}")
+            camp_data = {"url": url, "address": "", "grades": "", "cost": ""}
+        finally:
+            browser.close()
 
     return camp_data
 
