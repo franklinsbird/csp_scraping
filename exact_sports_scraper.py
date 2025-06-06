@@ -135,13 +135,13 @@ def get_camp_data(url):
         page.goto(url)
 
         # Wait for the camp data to load
-        page.wait_for_selector(ADDRESS_XPATH)
+        page.wait_for_selector(f"xpath={ADDRESS_XPATH}")
 
         # Extract camp data
         camp_data["url"] = url
-        camp_data["address"] = page.locator(ADDRESS_XPATH).inner_text()
-        camp_data["grades"] = page.locator(GRADES_XPATH).inner_text()
-        camp_data["cost"] = page.locator(COST_XPATH).inner_text()
+        camp_data["address"] = page.locator(f"xpath={ADDRESS_XPATH}").inner_text()
+        camp_data["grades"] = page.locator(f"xpath={GRADES_XPATH}").inner_text()
+        camp_data["cost"] = page.locator(f"xpath={COST_XPATH}").inner_text()
 
         browser.close()
 
