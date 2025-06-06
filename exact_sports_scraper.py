@@ -96,6 +96,8 @@ XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
 GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
 COST_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div[2]/h1/span"
 ADDRESS_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
+REGISTRATION_LINK_XPATH = "//*[@id='registration-widget']/div[2]/div[1]/div[3]/a"
+OVERVIEW_TITLE_XPATH = "//*[@id='overview-container']/div[2]/div/div[1]/h1"
 
 SHEET_ID = os.getenv("SHEET_ID")
 if not SHEET_ID:
@@ -132,16 +134,19 @@ def get_camp_data(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(url)
+        page.goto(url, wait_until="networkidle")
+        print(page.content())
 
         # Wait for the camp data to load
-        page.wait_for_selector(ADDRESS_XPATH)
+        page.wait_for_selector(f"xpath={OVERVIEW_TITLE_XPATH}", timeout=10000)
+
+        print("Extracting data from:", url)
 
         # Extract camp data
         camp_data["url"] = url
-        camp_data["address"] = page.locator(ADDRESS_XPATH).inner_text()
-        camp_data["grades"] = page.locator(GRADES_XPATH).inner_text()
-        camp_data["cost"] = page.locator(COST_XPATH).inner_text()
+        camp_data["address"] = page.locator(f"xpath={ADDRESS_XPATH}").inner_text()
+        camp_data["grades"] = page.locator(f"xpath={GRADES_XPATH}").inner_text()
+        camp_data["cost"] = page.locator(f"xpath={COST_XPATH}").inner_text()
 
         browser.close()
 

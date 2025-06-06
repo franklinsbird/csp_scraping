@@ -29,8 +29,8 @@ CREDS_FILE = "gcreds.json"
 
 # Load sheet
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, scope)
-client = gspread.authorize(creds)
+creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, scope) # type: ignore
+client = gspread.authorize(creds) # type: ignore
 sheet = client.open_by_key(SHEET_ID).worksheet(TAB_NAME)
 
 # Load GMaps Config (used via geocode_utils)
@@ -296,7 +296,7 @@ for index, row in existing_data.iterrows():
                     })
                     # Insert new rows directly below the current row
                     existing_data = pd.concat(
-                        [existing_data.iloc[:index + 1], pd.DataFrame([new_camp]), existing_data.iloc[index + 1:]],
+                        [existing_data.iloc[:index + 1], pd.DataFrame([new_camp]), existing_data.iloc[index + 1:]], # type: ignore
                         ignore_index=True
                     )
                     existing_camp_keys.add(new_camp_key)
