@@ -161,6 +161,7 @@ def create_dataframe_and_write_to_csv(data, output_file):
     # Write the DataFrame to a CSV file
     df.to_csv(output_file, index=False)
     print(f"DataFrame written to {output_file}")
+    return df
 
 def main():
     """
