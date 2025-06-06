@@ -94,10 +94,10 @@ URLS = [
 ]
 XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
 GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
-COST_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div[2]/h1/span"
+COST_XPATH = "//*[@id='registration-widget']/div[2]/div[2]/div[2]/h1/span"
 ADDRESS_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
 REGISTRATION_LINK_XPATH = "//*[@id='registration-widget']/div[2]/div[1]/div[3]/a"
-OVERVIEW_TITLE_XPATH = "//*[@id='overview-container']/div[2]/div/div[1]/h1"
+OVERVIEW_TITLE_XPATH = "//*[@id='overview-container']"
 
 SHEET_ID = os.getenv("SHEET_ID")
 if not SHEET_ID:
@@ -151,6 +151,37 @@ def get_camp_data(url):
         browser.close()
 
     return camp_data
+
+def extract_event_details(url):
+    """
+    Extracts the location and early bird price from the event details on the webpage.
+
+    Args:
+        url (str): The URL of the webpage.
+
+    Returns:
+        dict: A dictionary containing the location and early bird price.
+    """
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto(url, wait_until="networkidle")
+
+        # Wait for the event details container to load
+        page.wait_for_selector("#registration-widget")
+
+        # Extract location
+        location = page.locator("#registration-widget .event-row a").inner_text()
+
+        # Extract early bird price
+        early_bird_price = page.locator("#registration-widget .event-price-row:nth-child(2) h1 span").inner_text()
+
+        browser.close()
+
+    return {
+        "location": location.strip(),
+        "early_bird_price": early_bird_price.strip()
+    }
 
 def create_dataframe_and_write_to_csv(data, output_file):
     """
