@@ -29,7 +29,7 @@ def scrape_csp_pages(urls: List[str] = URLS) -> List[Dict[str, str]]:
             "Ages / Grade Level": "",
             "Cost": "",
         }
-        addl = get_llm_data(res, camp)
+        addl = get_llm_data(res, "div.dt-box")
         camps.append(camp)
         if addl:
             camps.extend(addl)
@@ -38,4 +38,4 @@ def scrape_csp_pages(urls: List[str] = URLS) -> List[Dict[str, str]]:
 if __name__ == "__main__":
     data = scrape_csp_pages()
     for item in data:
-        print(item)
+        print("CSP Camps Found:", item)

@@ -1,20 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-from geopy.geocoders import Nominatim
+from geocode_utils import get_lat_long
 import time
+from urllib.parse import urljoin
 
 BASE_URL = "https://www.ussportscamps.com"
 START_URL = f"{BASE_URL}/soccer/nike"
-geolocator = Nominatim(user_agent="nike-camp-scraper")
-
-def get_lat_long(location):
-    try:
-        time.sleep(1)  # to avoid hitting rate limits
-        loc = geolocator.geocode(location)
-        return (loc.latitude, loc.longitude) if loc else ("", "")
-    except:
-        return ("", "")
 
 def classify_grade_level(ages):
     grade_levels = []
@@ -36,7 +28,10 @@ def scrape_state_camps():
     # All clickable camp links on the main page
     links = soup.select('dl.locations-list a')
     for link in links:
-        camp_url = BASE_URL + link.get('href')
+        href = link.get('href')
+        if not href:
+            continue
+        camp_url = urljoin(BASE_URL, str(href))
         camp_resp = requests.get(camp_url)
         camp_soup = BeautifulSoup(camp_resp.text, 'html.parser')
 

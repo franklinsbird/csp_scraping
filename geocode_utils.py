@@ -7,7 +7,6 @@ if not GOOGLE_API_KEY:
 
 gmaps = GoogleMaps(key=GOOGLE_API_KEY)
 
-
 def get_lat_long(place: str):
     """Return (lat, lng, city) for a place using Google Maps geocoding."""
     try:
