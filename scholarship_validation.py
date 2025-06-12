@@ -1,3 +1,4 @@
+import csv
 import gspread
 from google.oauth2.service_account import Credentials
 import requests
@@ -9,7 +10,8 @@ TAB_NAME = "Scholarships"
 def validate_scholarship_links(sheet_id, tab_name):
     """
     Connects to the specified Google Sheet tab, checks if the links in the "URL" column load successfully,
-    and writes the response to a new column called "URL Status" in the far-right column.
+    and writes the response to the "URL Status" column.
+    Progress is saved to a CSV file every 100 rows.
 
     Args:
         sheet_id (str): The ID of the Google Sheet.
@@ -26,8 +28,16 @@ def validate_scholarship_links(sheet_id, tab_name):
     # Get all records from the sheet
     records = sheet.get_all_records()
 
+    # Find the "URL Status" column
+    header_row = sheet.row_values(1)
+    if "URL Status" in header_row:
+        url_status_col_index = header_row.index("URL Status") + 1  # Convert to 1-based index
+    else:
+        raise ValueError("The 'URL Status' column does not exist in the sheet. Please add it manually.")
+
     # Prepare a list to update the "URL Status" column
     url_status = []
+    csv_file = "url_status_progress.csv"
 
     # Check each URL in the "URL" column
     for i, record in enumerate(records, start=2):  # Start at row 2 to account for the header
@@ -41,7 +51,7 @@ def validate_scholarship_links(sheet_id, tab_name):
                     status = "Loaded Successfully"
                     print(f"URL {i} loaded successfully.")
                 else:
-                    status = f"Returned status code {response.status_code}"
+                    status = f"Error {response.status_code}"
                     print(f"URL {i} returned status code {response.status_code}.")
             except Exception as e:
                 status = f"Failed to load. Error: {e}"
@@ -49,14 +59,26 @@ def validate_scholarship_links(sheet_id, tab_name):
             status = "No URL Provided"
 
         # Append the status to the list
-        url_status.append(status)
+        url_status.append((i, url, status))
 
-    # Find the next empty column
-    num_columns = len(sheet.row_values(1))  # Get the number of columns in the header row
-    next_column_letter = gspread.utils.rowcol_to_a1(1, num_columns + 1)[0]  # Convert to column letter
+        # Write progress to CSV every 100 rows
+        if len(url_status) % 100 == 0:
+            with open(csv_file, "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(["Row", "URL", "Status"])
+                writer.writerows(url_status)
+            print(f"Progress saved to {csv_file} at row {i}.")
 
-    # Update the "URL Status" column in the far-right column
-    sheet.update( [[status] for status in url_status], f"{next_column_letter}2:{next_column_letter}{len(url_status) + 1}")
+    # Write final progress to CSV
+    with open(csv_file, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Row", "URL", "Status"])
+        writer.writerows(url_status)
+    print(f"Final progress saved to {csv_file}.")
+
+    # Update the "URL Status" column in the sheet
+    for row, _, status in url_status:
+        sheet.update_cell(row, url_status_col_index, status)  # Write each status
     print("URL Status column updated successfully.")
 
 validate_scholarship_links(SHEET_ID, TAB_NAME)
