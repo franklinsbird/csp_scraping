@@ -1,0 +1,542 @@
+{
+  "men": {
+    "Division 2": {
+      "Pacific West": {
+        "url": "",
+        "xpath": ""
+      },
+      "Rocky Mountain Athletic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northeast 10": {
+        "url": "",
+        "xpath": ""
+      },
+      "South Atlantic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Midwest Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Gulf South": {
+        "url": "",
+        "xpath": ""
+      },
+      "Sunshine State Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Conference Carolinas": {
+        "url": "",
+        "xpath": ""
+      },
+      "Central Atlantic Collegiate Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Pennsylvania State Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "California Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Peach Belt Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "East Coast Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Mountain East Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Lone Star": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Lakes Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Lakes Valley": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great American Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Northwest Athletic Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Independent": {
+        "url": "",
+        "xpath": ""
+      }
+    },
+    "Division 3": {
+      "Michigan Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Northeast Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Middle Atlantic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Allegheny Mountain": {
+        "url": "",
+        "xpath": ""
+      },
+      "Empire 8": {
+        "url": "",
+        "xpath": ""
+      },
+      "Presidential Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "New England Small College": {
+        "url": "",
+        "xpath": ""
+      },
+      "Heartland": {
+        "url": "",
+        "xpath": ""
+      },
+      "Collegiate Conference of the South": {
+        "url": "",
+        "xpath": ""
+      },
+      "Minnesota Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "College Conference of Illinois & Wisconsin": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northern Athletic Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Old Dominion Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "New England Men's and Women's": {
+        "url": "",
+        "xpath": ""
+      },
+      "Ohio Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Liberty League": {
+        "url": "",
+        "xpath": ""
+      },
+      "City University of New York Athletic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Midwest Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Upper Midwest Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "St. Louis Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "University Athletic Association": {
+        "url": "",
+        "xpath": ""
+      },
+      "USA South": {
+        "url": "",
+        "xpath": ""
+      },
+      "Massachusetts State Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "United East": {
+        "url": "",
+        "xpath": ""
+      },
+      "American Rivers": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern California Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Landmark Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Atlantic East": {
+        "url": "",
+        "xpath": ""
+      },
+      "Coast to Coast": {
+        "url": "",
+        "xpath": ""
+      },
+      "Conf of New England": {
+        "url": "",
+        "xpath": ""
+      },
+      "North Coast Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Centennial": {
+        "url": "",
+        "xpath": ""
+      },
+      "American Southwest": {
+        "url": "",
+        "xpath": ""
+      },
+      "Little East Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Skyline": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northwest Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "North Atlantic": {
+        "url": "",
+        "xpath": ""
+      },
+      "New Jersey Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "National Christian": {
+        "url": "",
+        "xpath": ""
+      },
+      "State University Of New York Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Wisconsin Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      }
+    }
+  },
+  "women": {
+    "Division 2": {
+      "Pacific West": {
+        "url": "",
+        "xpath": ""
+      },
+      "Rocky Mountain Athletic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northeast 10": {
+        "url": "",
+        "xpath": ""
+      },
+      "Peach Belt Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "South Atlantic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Lone Star": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Midwest Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Gulf South": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northern Sun Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Sunshine State Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Conference Carolinas": {
+        "url": "",
+        "xpath": ""
+      },
+      "Pennsylvania State Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Independent": {
+        "url": "",
+        "xpath": ""
+      },
+      "California Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Central Atlantic Collegiate Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Northwest Athletic Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "East Coast Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Mountain East Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Lakes Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Lakes Valley": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great American Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Mid America Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "National Christian College Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Mid-America Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      }
+    },
+    "Division 3": {
+      "Michigan Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Collegiate Conference of the South": {
+        "url": "",
+        "xpath": ""
+      },
+      "Great Northeast Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Middle Atlantic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Allegheny Mountain": {
+        "url": "",
+        "xpath": ""
+      },
+      "Empire 8": {
+        "url": "",
+        "xpath": ""
+      },
+      "Presidential Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northern Athletic Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "New England Small College": {
+        "url": "",
+        "xpath": ""
+      },
+      "Heartland": {
+        "url": "",
+        "xpath": ""
+      },
+      "Minnesota Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "College Conference of Illinois & Wisconsin": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Old Dominion Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "New England Men's and Women's": {
+        "url": "",
+        "xpath": ""
+      },
+      "Ohio Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Liberty League": {
+        "url": "",
+        "xpath": ""
+      },
+      "Midwest Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Upper Midwest Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "St. Louis Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "National Christian": {
+        "url": "",
+        "xpath": ""
+      },
+      "University Athletic Association": {
+        "url": "",
+        "xpath": ""
+      },
+      "USA South": {
+        "url": "",
+        "xpath": ""
+      },
+      "Massachusetts State Collegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "City University of New York Athletic Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "United East": {
+        "url": "",
+        "xpath": ""
+      },
+      "Centennial": {
+        "url": "",
+        "xpath": ""
+      },
+      "American Rivers": {
+        "url": "",
+        "xpath": ""
+      },
+      "Southern California Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      },
+      "Landmark Conference": {
+        "url": "",
+        "xpath": ""
+      },
+      "Atlantic East": {
+        "url": "",
+        "xpath": ""
+      },
+      "Coast to Coast": {
+        "url": "",
+        "xpath": ""
+      },
+      "North Coast Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "American Southwest": {
+        "url": "",
+        "xpath": ""
+      },
+      "Little East Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "Conf of New England": {
+        "url": "",
+        "xpath": ""
+      },
+      "Skyline": {
+        "url": "",
+        "xpath": ""
+      },
+      "Northwest Conf": {
+        "url": "",
+        "xpath": ""
+      },
+      "North Atlantic": {
+        "url": "",
+        "xpath": ""
+      },
+      "New Jersey Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "State University Of New York Athletic": {
+        "url": "",
+        "xpath": ""
+      },
+      "Home": {
+        "url": "",
+        "xpath": ""
+      },
+      "Wisconsin Intercollegiate": {
+        "url": "",
+        "xpath": ""
+      }
+    }
+  }
+}
