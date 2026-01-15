@@ -2,540 +2,1867 @@
   "men": {
     "Division 2": {
       "Pacific West": {
-        "url": "",
-        "xpath": ""
+        "url": "https://thepacwest.com/standings.aspx?standings=202",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "Overall": "overall_record",
+          "CONF": "conf_record"
+        },
+        "col_map_indices": {}
       },
       "Rocky Mountain Athletic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://rmacsports.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "RMAC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Northeast 10": {
-        "url": "",
-        "xpath": ""
+        "url": "https://northeast10.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf. W-L": "conf_record",
+          "Record": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "South Atlantic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.thesac.com/sports/msoc/2025-26/standings?jsRendering=true",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "Team": "school",
+          "W-L": [
+            "conf_record",
+            "overall_record"
+          ]
+        },
+        "col_map_indices": {}
       },
       "Great Midwest Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://greatmidwestsports.com/standings.aspx?standings=177",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Gulf South": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gscsports.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "GSC Record": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Sunshine State Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://sunshinestateconference.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "SSC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Conference Carolinas": {
-        "url": "",
-        "xpath": ""
+        "url": "https://conferencecarolinas.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Central Atlantic Collegiate Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://caccathletics.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "CACC Record": "conf_record",
+          "Overall Record": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Pennsylvania State Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://psacsports.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "PSAC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "California Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://goccaa.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "Institution": "school",
+          "CCAA": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Peach Belt Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://peachbeltconference.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "PBC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "East Coast Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://eccsports.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "CONF. RECORD": "conf_record",
+          "RECORD": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Mountain East Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://mountaineast.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "MEC": "conf_record",
+          "OVR": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Lone Star": {
-        "url": "",
-        "xpath": ""
+        "url": "https://lonestarconference.org/standings.aspx?standings=197",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "LSC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Lakes Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gliac.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Lakes Valley": {
-        "url": "",
-        "xpath": ""
+        "url": "https://glvcsports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great American Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://greatamericanconference.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Northwest Athletic Conf": {
-        "url": "",
-        "xpath": ""
-      },
-      "Independent": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gnacsports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "GNAC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       }
     },
     "Division 3": {
       "Michigan Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://miaa.org/standings.aspx?standings=270",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "overall_record": 7,
+          "pts": 2
+        },
+        "col_map": {
+          "School": "school",
+          "Conf. GP": "conf_record",
+          "CPct.": "overall_record"
+        }
       },
       "Great Northeast Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.thegnac.com/sports/msoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "Team": "school",
+          "W-L-T": [
+            "conf_record",
+            "overall_record"
+          ]
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "standing": 2
+        },
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record",
+          "Points": "standing"
+        }
       },
       "Middle Atlantic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gomacsports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 2,
+          "standing": 2
+        },
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record",
+          "CPts": "standing"
+        }
       },
       "Allegheny Mountain": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.amccsports.org/sports/msoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "Team": "school",
+          "W-L": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 5
+        },
+        "col_map": {
+          "Team": "school",
+          "W-L": "overall_record"
+        }
       },
       "Empire 8": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 5,
+          "pts": 3
+        }
       },
       "Presidential Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://pacathletics.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "PAC W-L-T": "conf_record",
+          "OVERALL W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 5,
+          "pts": 3
+        },
+        "col_map": {
+          "School": "school",
+          "PAC W-L-T": "conf_record",
+          "Overall W-L-T": "overall_record"
+        }
       },
       "New England Small College": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "NESCAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "overall_record": 5,
+          "pts": 1
+        }
       },
       "Heartland": {
-        "url": "",
-        "xpath": ""
+        "url": "https://heartlandconf.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 3,
+          "pts": 1
+        },
+        "col_map": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        }
       },
       "Collegiate Conference of the South": {
-        "url": "",
-        "xpath": ""
+        "url": "https://collegiateconferenceofthesouth.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 3
+        },
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Minnesota Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://miacathletics.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 4,
+          "pts": 1
+        },
+        "col_map": {
+          "TEAM": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "College Conference of Illinois & Wisconsin": {
-        "url": "",
-        "xpath": ""
+        "url": "https://cciw.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CCIW": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 1
+        },
+        "col_map": {
+          "School": "school",
+          "CCIW": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Northern Athletic Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://naccsports.org/sports/msoc/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "NACC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 7,
+          "pts": 4
+        },
+        "col_map": {
+          "School": "school",
+          "NACC": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Southern Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://scacsports.com/sports/msoc/2025-26/standings",
+        "xpath": "/html/body/div[1]/div/div[2]/main/div[1]/div/table",
+        "col_map_names": {
+          "Record": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 9
+        },
+        "header_row": 1,
+        "col_map": {
+          "": "school",
+          "Record": "overall_record"
+        }
       },
       "Old Dominion Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://odaconline.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "ODAC RECORD": "conf_record",
+          "OVERALL RECORD": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "overall_record": 7,
+          "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "ODAC Record": "conf_record",
+          "Overall Record": "overall_record"
+        }
       },
       "New England Men's and Women's": {
-        "url": "",
-        "xpath": ""
+        "url": "https://newmacsports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 6,
+          "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Ohio Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://oac.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/div[3]/div[2]/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "OAC RECORD": "conf_record",
+          "OVERALL RECORD": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "OAC Record": "conf_record",
+          "Overall Rec": "overall_record"
+        }
       },
       "Liberty League": {
-        "url": "",
-        "xpath": ""
+        "url": "https://libertyleagueathletics.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 2
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "City University of New York Athletic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://cunyathletics.com/standings.aspx?path=wsoccer",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CUNYAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "CUNYAC": "conf_record",
+          "Overal": "overall_record"
+        }
       },
       "Midwest Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://midwestconference.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 2,
+          "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Southern Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://saa-sports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "SAA": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "SCHOOL": "school",
+          "SAA": "conf_record",
+          "OVERALL": "overall_record"
+        }
       },
       "Upper Midwest Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://umacathletics.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "UMAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "Team": "school",
+          "UMAC": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "St. Louis Intercollegiate": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL NAME WITH LOGO (LINK TO SCHEDULE)": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 3,
+          "overall_record": 4
+        }
       },
       "University Athletic Association": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 5
+        }
       },
       "USA South": {
-        "url": "",
-        "xpath": ""
+        "url": "https://usasouth.net/sports/msoc/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        }
       },
       "Massachusetts State Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.mascac.com/sports/msoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "W-L": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "overall_record": 6
+        },
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L": "overall_record"
+        }
       },
       "United East": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 7
+        }
       },
       "American Rivers": {
-        "url": "",
-        "xpath": ""
+        "url": "https://rollrivers.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "A-R-C": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "A-R-C": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Southern California Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://thesciac.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Landmark Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://landmarkconference.org/sports/msoc/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 6
+        },
+        "header_row": 0,
+        "col_map": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        }
       },
       "Atlantic East": {
-        "url": "",
-        "xpath": ""
+        "url": "https://atlanticeast.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOLS": "school",
+          "AEC RECORD": "conf_record",
+          "OVERALL RECORD": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 6,
+          "overall_record": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "Schools": "school",
+          "AEC  Record": "conf_record",
+          "Overall Record": "overall_record"
+        }
       },
       "Coast to Coast": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.c2csports.com/sports/msoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div[2]/div/table",
+        "col_map_names": {
+          "W-L": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "pts": 2,
+          "overall_record": 1
+        }
       },
       "Conf of New England": {
-        "url": "",
-        "xpath": ""
+        "url": "https://cnesports.org/sports/msoc/2022-23/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 5,
+          "overall_record": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "North Coast Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://northcoast.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Centennial": {
-        "url": "",
-        "xpath": ""
+        "url": "https://centennial.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CENTENNIAL": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 1,
+          "overall_record": 5
+        },
+        "header_row": 0,
+        "col_map": {
+          "SCHOOL": "school",
+          "CENTENNIAL": "conf_record",
+          "OVERALL": "overall_record"
+        }
       },
       "American Southwest": {
-        "url": "",
-        "xpath": ""
+        "url": "https://ascsports.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 2,
+          "overall_record": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Little East Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://littleeast.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 5
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Skyline": {
-        "url": "",
-        "xpath": ""
+        "url": "https://skylineconference.org/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 3,
+          "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Northwest Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://nwcsports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        }
       },
       "North Atlantic": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "INSTITUTION": "school",
+          "C-REC": "conf_record",
+          "O-REC": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 1,
+          "overall_record": 6
+        }
       },
       "New Jersey Athletic": {
         "url": "",
-        "xpath": ""
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        }
       },
-      "National Christian": {
+      "Home": {
         "url": "",
-        "xpath": ""
-      },
-      "State University Of New York Athletic": {
-        "url": "",
-        "xpath": ""
+        "xpath": "",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Wisconsin Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://wiacsports.com/standings.aspx?path=msoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "WIAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 2,
+          "overall_record": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "WIAC": "conf_record",
+          "Overall": "overall_record"
+        }
       }
     }
   },
   "women": {
     "Division 2": {
       "Pacific West": {
-        "url": "",
-        "xpath": ""
+        "url": "https://thepacwest.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "Overall": "overall_record",
+          "CONF": "conf_record"
+        },
+        "col_map_indices": {}
       },
       "Rocky Mountain Athletic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://rmacsports.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "RMAC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Northeast 10": {
-        "url": "",
-        "xpath": ""
+        "url": "https://northeast10.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf. W-L": "conf_record",
+          "Record": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Peach Belt Conference": {
-        "url": "",
-        "xpath": ""
-      },
-      "Southern Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://peachbeltconference.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "PBC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "South Atlantic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.thesac.com/sports/wsoc/2025-26/standings?jsRendering=true",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "Team": "school",
+          "W-L": [
+            "conf_record",
+            "overall_record"
+          ]
+        },
+        "col_map_indices": {}
       },
       "Lone Star": {
-        "url": "",
-        "xpath": ""
+        "url": "https://lonestarconference.org/standings.aspx?path=wsoc&",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "LSC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Midwest Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://greatmidwestsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Gulf South": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gscsports.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "GSC Record": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Northern Sun Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://northernsun.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Sunshine State Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://sunshinestateconference.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "SSC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Conference Carolinas": {
-        "url": "",
-        "xpath": ""
+        "url": "https://conferencecarolinas.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Pennsylvania State Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "Independent": {
-        "url": "",
-        "xpath": ""
+        "url": "https://psacsports.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "PSAC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "California Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://goccaa.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "Institution": "school",
+          "CCAA": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Central Atlantic Collegiate Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://caccathletics.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "CACC Record": "conf_record",
+          "Overall Record": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Northwest Athletic Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gnacsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "GNAC": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "East Coast Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://eccsports.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "CONF. RECORD": "conf_record",
+          "RECORD": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Mountain East Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://mountaineast.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "MEC": "conf_record",
+          "OVR": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Lakes Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gliac.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great Lakes Valley": {
-        "url": "",
-        "xpath": ""
+        "url": "https://glvcsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Great American Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://greatamericanconference.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "Mid America Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://themiaa.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       },
       "National Christian College Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "Mid-America Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://thenccaa.org/stats.aspx?path=wsoc2&year=2025",
+        "xpath": "/html/body/form/main/article/div[2]/section[1]/section[1]/div[1]/div/table",
+        "col_map_names": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        },
+        "col_map_indices": {}
       }
     },
     "Division 3": {
       "Michigan Intercollegiate": {
-        "url": "",
-        "xpath": ""
-      },
-      "Collegiate Conference of the South": {
-        "url": "",
-        "xpath": ""
+        "url": "https://miaa.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Great Northeast Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.thegnac.com/sports/wsoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "Team": "school",
+          "W-L-T": [
+            "conf_record",
+            "overall_record"
+          ]
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        },
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        }
       },
       "Middle Atlantic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gomacsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 2
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Allegheny Mountain": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.amccsports.org/sports/wsoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "Team": "school",
+          "W-L": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 5
+        },
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L": "overall_record"
+        }
       },
       "Empire 8": {
-        "url": "",
-        "xpath": ""
+        "url": "https://empire8.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 5,
+          "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
+        }
       },
       "Presidential Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "Northern Athletic Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://pacathletics.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "PAC W-L-T": "conf_record",
+          "OVERALL W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 5,
+          "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "PAC W-L-T": "conf_record",
+          "Overall W-L-T": "overall_record"
+        }
       },
       "New England Small College": {
-        "url": "",
-        "xpath": ""
+        "url": "https://nescac.com/standings.aspx?standings=390",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "NESCAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "overall_record": 5,
+          "pts": 1
+        }
       },
       "Heartland": {
-        "url": "",
-        "xpath": ""
+        "url": "https://heartlandconf.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 3,
+          "pts": 1
+        }
+      },
+      "Collegiate Conference of the South": {
+        "url": "https://collegiateconferenceofthesouth.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 4,
+          "pts": 3
+        }
       },
       "Minnesota Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://miacathletics.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 4,
+          "pts": 1
+        }
       },
       "College Conference of Illinois & Wisconsin": {
-        "url": "",
-        "xpath": ""
+        "url": "https://cciw.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CCIW": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 4,
+          "pts": 1
+        }
+      },
+      "Northern Athletic Collegiate": {
+        "url": "https://naccsports.org/sports/wsoc/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "NACC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 7,
+          "pts": 4
+        }
       },
       "Southern Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://scacsports.com/sports/wsoc/2025-26/standings",
+        "xpath": "/html/body/div[1]/div/div[2]/main/div[1]/div/table",
+        "col_map_names": {
+          "Record": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 9,
+          "pts": 4
+        }
       },
       "Old Dominion Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://odaconline.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "ODAC RECORD": "conf_record",
+          "OVERALL RECORD": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 7,
+          "pts": 3
+        }
       },
       "New England Men's and Women's": {
-        "url": "",
-        "xpath": ""
+        "url": "https://newmacsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "overall_record": 6,
+          "pts": 3
+        }
       },
       "Ohio Athletic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://oac.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/div[3]/div[2]/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "OAC RECORD": "conf_record",
+          "OVERALL RECORD": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 2
+        }
       },
       "Liberty League": {
-        "url": "",
-        "xpath": ""
-      },
-      "Midwest Conference": {
-        "url": "",
-        "xpath": ""
-      },
-      "Southern Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "Upper Midwest Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "St. Louis Intercollegiate": {
-        "url": "",
-        "xpath": ""
-      },
-      "National Christian": {
-        "url": "",
-        "xpath": ""
-      },
-      "University Athletic Association": {
-        "url": "",
-        "xpath": ""
-      },
-      "USA South": {
-        "url": "",
-        "xpath": ""
-      },
-      "Massachusetts State Collegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://libertyleagueathletics.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 2
+        }
       },
       "City University of New York Athletic Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://cunyathletics.com/standings.aspx?path=wsoccer",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CUNYAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4,
+          "pts": 3
+        }
+      },
+      "Midwest Conference": {
+        "url": "https://midwestconference.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 2,
+          "overall_record": 4
+        }
+      },
+      "Southern Athletic": {
+        "url": "https://saa-sports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "SAA": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        }
+      },
+      "Upper Midwest Athletic": {
+        "url": "https://umacathletics.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "UMAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 3
+        }
+      },
+      "St. Louis Intercollegiate": {
+        "url": "https://sliac.org/standings.aspx?standings=235",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL NAME WITH LOGO (LINK TO SCHEDULE)": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 3,
+          "overall_record": 4
+        }
+      },
+      "University Athletic Association": {
+        "url": "https://uaasports.info/standings.aspx?standings=221",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 5
+        }
+      },
+      "USA South": {
+        "url": "https://usasouth.net/sports/wsoc/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 7
+        }
+      },
+      "Massachusetts State Collegiate": {
+        "url": "https://www.mascac.com/sports/wsoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "W-L": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 1,
+          "overall_record": 6
+        }
       },
       "United East": {
-        "url": "",
-        "xpath": ""
-      },
-      "Centennial": {
-        "url": "",
-        "xpath": ""
+        "url": "https://gounitedeast.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 7
+        }
       },
       "American Rivers": {
-        "url": "",
-        "xpath": ""
+        "url": "https://rollrivers.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "A-R-C": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        }
       },
       "Southern California Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://thesciac.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 7
+        }
       },
       "Landmark Conference": {
-        "url": "",
-        "xpath": ""
+        "url": "https://landmarkconference.org/sports/wsoc/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "TEAM": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 2,
+          "overall_record": 6
+        }
       },
       "Atlantic East": {
-        "url": "",
-        "xpath": ""
+        "url": "https://atlanticeast.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOLS": "school",
+          "AEC RECORD": "conf_record",
+          "OVERALL RECORD": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 6,
+          "overall_record": 3
+        }
       },
       "Coast to Coast": {
-        "url": "",
-        "xpath": ""
-      },
-      "North Coast Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "American Southwest": {
-        "url": "",
-        "xpath": ""
-      },
-      "Little East Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://www.c2csports.com/sports/wsoc/2025-26/standings",
+        "xpath": "/html/body/main/div/div[1]/div[2]/div[2]/div/table",
+        "col_map_names": {
+          "W-L": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "pts": 2,
+          "overall_record": 1
+        }
       },
       "Conf of New England": {
-        "url": "",
-        "xpath": ""
+        "url": "https://cnesports.org/sports/wsoc/2022-23/standings",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 5,
+          "overall_record": 3
+        }
+      },
+      "North Coast Athletic": {
+        "url": "https://northcoast.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        }
+      },
+      "Centennial": {
+        "url": "https://centennial.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CENTENNIAL": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 1,
+          "overall_record": 5
+        }
+      },
+      "American Southwest": {
+        "url": "https://ascsports.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 2,
+          "overall_record": 3
+        }
+      },
+      "Little East Conf": {
+        "url": "https://littleeast.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 5
+        }
       },
       "Skyline": {
-        "url": "",
-        "xpath": ""
+        "url": "https://skylineconference.org/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 3,
+          "overall_record": 4
+        }
       },
       "Northwest Conf": {
-        "url": "",
-        "xpath": ""
+        "url": "https://nwcsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        }
       },
       "North Atlantic": {
-        "url": "",
-        "xpath": ""
+        "url": "https://nacathletics.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "INSTITUTION": "school",
+          "C-REC": "conf_record",
+          "O-REC": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 3,
+          "pts": 1,
+          "overall_record": 6
+        }
       },
       "New Jersey Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "State University Of New York Athletic": {
-        "url": "",
-        "xpath": ""
-      },
-      "Home": {
-        "url": "",
-        "xpath": ""
+        "url": "https://njacsports.com/standings.aspx?standings=315",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 2,
+          "pts": 1,
+          "overall_record": 4
+        }
       },
       "Wisconsin Intercollegiate": {
-        "url": "",
-        "xpath": ""
+        "url": "https://wiacsports.com/standings.aspx?path=wsoc",
+        "xpath": "/html/body/form/main/article/div[3]/table",
+        "col_map_names": {
+          "SCHOOL": "school",
+          "WIAC": "conf_record",
+          "OVERALL": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "pts": 2,
+          "overall_record": 3
+        }
       }
     }
   }

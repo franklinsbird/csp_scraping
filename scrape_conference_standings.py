@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 import gspread
 import json
 from datetime import datetime
+from typing import List, Optional, Tuple, cast
 
 # Config
 CREDS_FILE = 'cspscraping.json'
@@ -47,7 +48,6 @@ URLS = {
 
 USER_AGENT = 'Mozilla/5.0 (compatible; conf-standings-scraper/1.0)'
 
-
 def token_jaccard(a: str, b: str) -> float:
     a_tokens = set(re.findall(r"\w+", (a or '').lower()))
     b_tokens = set(re.findall(r"\w+", (b or '').lower()))
@@ -55,19 +55,16 @@ def token_jaccard(a: str, b: str) -> float:
         return 0.0
     return len(a_tokens & b_tokens) / len(a_tokens | b_tokens)
 
-
 def combined_similarity(a: str, b: str) -> float:
     seq = SequenceMatcher(None, (a or '').lower(), (b or '').lower()).ratio()
     j = token_jaccard(a, b)
     return 0.4 * seq + 0.6 * j
-
 
 def fetch_page(url: str) -> str:
     headers = {'User-Agent': USER_AGENT}
     r = requests.get(url, headers=headers, timeout=20)
     r.raise_for_status()
     return r.text
-
 
 def parse_topdrawersoccer_table(html_text: str):
     """Parse conference standings table(s). Try lxml to locate all conference table containers
@@ -184,7 +181,6 @@ def parse_topdrawersoccer_table(html_text: str):
                     parsed_any = True
         return results
 
-
 def load_university_list(client, sheet_id, uni_tab=UNIVERSITIES_TAB, gender='men'):
     try:
         ws = client.open_by_key(sheet_id).worksheet(uni_tab)
@@ -217,7 +213,6 @@ def load_university_list(client, sheet_id, uni_tab=UNIVERSITIES_TAB, gender='men
             universities.append((r_idx, name, conf))
     return universities, ws
 
-
 def find_best_candidates(scraped_name: str, universities, top_n=10, preferred_conf=None):
     """Return top_n candidate tuples (row, name, score).
 
@@ -236,7 +231,6 @@ def find_best_candidates(scraped_name: str, universities, top_n=10, preferred_co
         scores.append((row, name, score))
     scores.sort(key=lambda x: x[2], reverse=True)
     return scores[:top_n]
-
 
 def interactive_confirm(scraped_name: str, candidate_list, universities=None, scraped_conf: str = ''):
     """candidate_list is list of (row, name, score) sorted desc. Returns chosen (row, name) or None.
@@ -328,7 +322,6 @@ def interactive_confirm(scraped_name: str, candidate_list, universities=None, sc
             return None
         print('Invalid input.')
 
-
 def safe_update_cell(ws, row: int, col: int, value, progress: dict, progress_file: str) -> object:
     """Perform a single-cell write while enforcing a per-minute write limit.
 
@@ -368,7 +361,6 @@ def safe_update_cell(ws, row: int, col: int, value, progress: dict, progress_fil
         # non-fatal
         pass
     return True
-
 
 def flush_pending_writes(ws, progress: dict, progress_file: str):
     """Attempt to flush any pending writes saved in progress['pending_writes'].
@@ -427,7 +419,6 @@ def flush_pending_writes(ws, progress: dict, progress_file: str):
                 else:
                     # preserve any other columns for debugging
                     data[f'col_{c}'] = v
-            print(f"Updated row {row}: {data}")
 
     # persist remaining pending writes
     progress['pending_writes'] = remaining
@@ -440,7 +431,6 @@ def flush_pending_writes(ws, progress: dict, progress_file: str):
         print(f"Saved {len(remaining)} pending write group(s) to {progress_file}; they will be retried next run.")
     else:
         print('All pending writes flushed.')
-
 
 def update_university_record(ws, row: int, data: dict, progress: dict, progress_file: str):
     """Update university record in sheet using safe writes that respect rate limits.
@@ -481,7 +471,6 @@ def update_university_record(ws, row: int, data: dict, progress: dict, progress_
     except Exception as e:
         print(f"Error updating row {row}: {e}")
         return False
-
 
 def validate_sheet_io(creds_file=CREDS_FILE, sheet_id=SHEET_ID):
     """Validate Google Sheets read/write access.
@@ -560,316 +549,18 @@ def validate_sheet_io(creds_file=CREDS_FILE, sheet_id=SHEET_ID):
         print(result['message'])
         return result
 
-
-def gather_division_conference_xpaths():
-    """Gather standings URL and XPath for Division 2 and Division 3 conferences from the sheet.
-
-    This function reads the `Universities` tab and extracts distinct conference
-    names where the division column equals 'Division 2' or 'Division 3' for both
-    men and women (columns expected: 'men_ncaa_division', 'men_conference',
-    'women_ncaa_division', 'women_conference'). For each distinct conference it
-    prompts the user to enter the standings page URL and the full XPath to the
-    conference container/table. Results are saved to
-    '.division_conference_xpaths.json'.
-    """
-    print('\nGather Division 2 and Division 3 conference standings URLs and XPaths from sheet')
-    if not SHEET_ID:
-        print('SHEET_ID not set. Set SHEET_ID environment variable and retry.')
-        return {}
-
-    # Authorize and open the sheet
-    try:
-        client = gspread.service_account(filename=CREDS_FILE)
-        sh = client.open_by_key(SHEET_ID)
-        try:
-            ws = sh.worksheet(UNIVERSITIES_TAB)
-        except Exception:
-            ws = sh.get_worksheet(0)
-    except Exception as e:
-        print('Failed to open Google Sheet:', e)
-        return {}
-
-    vals = ws.get_all_values()
-    if not vals or len(vals) < 2:
-        print('Universities tab appears empty or malformed.')
-        return {}
-
-    header = [h.strip().lower() for h in vals[1]]
-
-    def find_col(names):
-        for n in names:
-            if n in header:
-                return header.index(n)
-        return None
-
-    men_div_idx = find_col(['men_ncaa_division', 'men_division', 'men_ncaa_div'])
-    men_conf_idx = find_col(['men_conference', 'men_conf'])
-    women_div_idx = find_col(['women_ncaa_division', 'women_division', 'women_ncaa_div'])
-    women_conf_idx = find_col(['women_conference', 'women_conf'])
-
-    if men_div_idx is None or men_conf_idx is None:
-        print('Warning: could not find men division/conference columns by expected names; men gathering may be incomplete.')
-    if women_div_idx is None or women_conf_idx is None:
-        print('Warning: could not find women division/conference columns by expected names; women gathering may be incomplete.')
-
-    # Collect conferences per gender/division
-    target_divs = ['Division 2', 'Division 3']
-    mappings = {'men': {}, 'women': {}}
-    for g in ('men', 'women'):
-        for d in target_divs:
-            mappings[g].setdefault(d, {})
-
-    for row in vals[2:]:
-        # men
-        if men_div_idx is not None and men_conf_idx is not None and len(row) > max(men_div_idx, men_conf_idx):
-            div = row[men_div_idx].strip()
-            conf = row[men_conf_idx].strip()
-            if div in target_divs and conf:
-                mappings['men'].setdefault(div, {})
-                mappings['men'][div].setdefault(conf, None)
-        # women
-        if women_div_idx is not None and women_conf_idx is not None and len(row) > max(women_div_idx, women_conf_idx):
-            div = row[women_div_idx].strip()
-            conf = row[women_conf_idx].strip()
-            if div in target_divs and conf:
-                mappings['women'].setdefault(div, {})
-                mappings['women'][div].setdefault(conf, None)
-
-    # Now prompt the user for URL and XPath for each discovered conference
-    # Non-interactive mode: load existing JSON (if any) and add missing entries.
-    out_file = os.path.join(os.path.dirname(__file__), '.division_conference_xpaths.json')
-    try:
-        with open(out_file, 'r') as f:
-            existing = json.load(f)
-    except Exception:
-        existing = {}
-
-    # Ensure top-level structure
-    existing.setdefault('men', {})
-    existing.setdefault('women', {})
-
-    for g in ('men', 'women'):
-        for div in target_divs:
-            confs = sorted(mappings[g].get(div, {}).keys())
-            if not confs:
-                continue
-            print(f"Found {len(confs)} {g.upper()} conferences in {div}.")
-            # ensure division exists in existing mapping
-            existing[g].setdefault(div, {})
-            for conf in confs:
-                # Decide whether to add: Only add for men's Division 3 and women's Division 2/3
-                if g == 'men' and div == 'Division 2':
-                    # preserve existing men's Division 2 entries; do not add or overwrite
-                    if conf in existing['men'].get('Division 2', {}):
-                        # keep existing
-                        mappings[g][div][conf] = existing['men']['Division 2'][conf]
-                    else:
-                        # user indicated men's D2 already filled; skip adding empty
-                        print(f"Skipping add for men's Division 2 conference '{conf}' (preserving existing).")
-                        mappings[g][div].pop(conf, None)
-                    continue
-
-                # For other target groups (men D3, women D2/D3), add empty entry if not present
-                existing_entry = existing.get(g, {}).get(div, {}).get(conf)
-                if existing_entry:
-                    mappings[g][div][conf] = existing_entry
-                else:
-                    mappings[g][div][conf] = {'url': '', 'xpath': ''}
-
-    # Persist results
-    # Write file atomically and verify
-    try:
-        import tempfile
-        dirpath = os.path.dirname(out_file) or '.'
-        with tempfile.NamedTemporaryFile('w', dir=dirpath, delete=False, encoding='utf-8') as tf:
-            json.dump(existing, tf, indent=2)
-            tempname = tf.name
-        os.replace(tempname, out_file)
-        print(f"Wrote {added} new conference entries to {out_file}")
-    except Exception as e:
-        print(f"Failed to write to {out_file}: {e}")
-
-    # Reload to confirm
-    try:
-        with open(out_file, 'r', encoding='utf-8') as f:
-            reloaded = json.load(f)
-    except Exception as e:
-        print('Failed to reload written file:', e)
-        reloaded = existing
-
-    # Print summary of presence
-    if men_d3_confs:
-        print(f"\nMen Division 3 conferences added/seen: {len(men_d3_confs)}")
-        for c in sorted(men_d3_confs):
-            present = 'present' if c in reloaded.get('men', {}).get('Division 3', {}) else 'MISSING'
-            print(' -', c, '->', present)
-    for div in target_women_divs:
-        if women_confs.get(div):
-            print(f"\nWomen {div} conferences added/seen: {len(women_confs[div])}")
-            for c in sorted(women_confs[div]):
-                present = 'present' if c in reloaded.get('women', {}).get(div, {}) else 'MISSING'
-                print(' -', c, '->', present)
-
-    return existing
-
-
-def add_conferences_from_sheet():
-    """Read distinct conferences from the sheet and add empty url/xpath entries for:
-    - men's Division 3
-    - women's Division 2
-    - women's Division 3
-
-    Do not modify men's Division 2 entries. Persist to .division_conference_xpaths.json.
-    """
-    print('\nAdding conferences from sheet for men D3 and women D2/D3 (empty url/xpath)')
-    if not SHEET_ID:
-        print('SHEET_ID not set. Set SHEET_ID environment variable and retry.')
-        return {}
-
-    # Authorize and open the sheet
-    try:
-        client = gspread.service_account(filename=CREDS_FILE)
-        sh = client.open_by_key(SHEET_ID)
-        try:
-            ws = sh.worksheet(UNIVERSITIES_TAB)
-        except Exception:
-            ws = sh.get_worksheet(0)
-    except Exception as e:
-        print('Failed to open Google Sheet:', e)
-        return {}
-
-    vals = ws.get_all_values()
-    if not vals or len(vals) < 2:
-        print('Universities tab appears empty or malformed.')
-        return {}
-
-    header = [h.strip().lower() for h in vals[1]]
-
-    def find_col(names):
-        for n in names:
-            if n in header:
-                return header.index(n)
-        return None
-
-    men_div_idx = find_col(['men_ncaa_division', 'men_division', 'men_ncaa_div'])
-    men_conf_idx = find_col(['men_conference', 'men_conf'])
-    women_div_idx = find_col(['women_ncaa_division', 'women_division', 'women_ncaa_div'])
-    women_conf_idx = find_col(['women_conference', 'women_conf'])
-
-    if men_div_idx is None or men_conf_idx is None:
-        print('Warning: could not find men division/conference columns by expected names; men gathering may be incomplete.')
-    if women_div_idx is None or women_conf_idx is None:
-        print('Warning: could not find women division/conference columns by expected names; women gathering may be incomplete.')
-
-    target_men_div = 'Division 3'
-    target_women_divs = ['Division 2', 'Division 3']
-
-    men_d3_confs = set()
-    women_confs = {d: set() for d in target_women_divs}
-
-    for row in vals[2:]:
-        if men_div_idx is not None and men_conf_idx is not None and len(row) > max(men_div_idx, men_conf_idx):
-            div = row[men_div_idx].strip()
-            conf = row[men_conf_idx].strip()
-            if div == target_men_div and conf:
-                men_d3_confs.add(conf)
-        if women_div_idx is not None and women_conf_idx is not None and len(row) > max(women_div_idx, women_conf_idx):
-            div = row[women_div_idx].strip()
-            conf = row[women_conf_idx].strip()
-            if div in target_women_divs and conf:
-                women_confs[div].add(conf)
-
-    # Load existing mappings and merge
-    out_file = os.path.join(os.path.dirname(__file__), '.division_conference_xpaths.json')
-    try:
-        with open(out_file, 'r') as f:
-            existing = json.load(f)
-    except Exception:
-        existing = {}
-
-    existing.setdefault('men', {})
-    existing.setdefault('women', {})
-    existing['men'].setdefault('Division 2', {})
-    existing['men'].setdefault('Division 3', {})
-    existing['women'].setdefault('Division 2', {})
-    existing['women'].setdefault('Division 3', {})
-
-    # Add men's D3 conferences with empty url/xpath if missing
-    added = 0
-    for conf in sorted(men_d3_confs):
-        # Always set/overwrite men's Division 3 entries to ensure they're present
-        if conf in existing['men'].get('Division 3', {}):
-            print(f"Overwriting existing men Division 3 entry for '{conf}' with empty url/xpath")
-        else:
-            print(f"Adding men Division 3 entry for '{conf}'")
-        existing['men']['Division 3'][conf] = {'url': '', 'xpath': ''}
-        added += 1
-
-    # Add women's D2/D3 conferences
-    for div in target_women_divs:
-        for conf in sorted(women_confs.get(div, [])):
-            if conf in existing['women'].get(div, {}):
-                print(f"Overwriting existing women {div} entry for '{conf}' with empty url/xpath")
-            else:
-                print(f"Adding women {div} entry for '{conf}'")
-            existing['women'][div][conf] = {'url': '', 'xpath': ''}
-            added += 1
-
-    # Write file atomically and verify
-    try:
-        import tempfile
-        dirpath = os.path.dirname(out_file) or '.'
-        with tempfile.NamedTemporaryFile('w', dir=dirpath, delete=False, encoding='utf-8') as tf:
-            json.dump(existing, tf, indent=2)
-            tempname = tf.name
-        os.replace(tempname, out_file)
-        print(f"Wrote {added} new conference entries to {out_file}")
-    except Exception as e:
-        print(f"Failed to write to {out_file}: {e}")
-
-    # Reload to confirm
-    try:
-        with open(out_file, 'r', encoding='utf-8') as f:
-            reloaded = json.load(f)
-    except Exception as e:
-        print('Failed to reload written file:', e)
-        reloaded = existing
-
-    # Print summary of presence
-    if men_d3_confs:
-        print(f"\nMen Division 3 conferences added/seen: {len(men_d3_confs)}")
-        for c in sorted(men_d3_confs):
-            present = 'present' if c in reloaded.get('men', {}).get('Division 3', {}) else 'MISSING'
-            print(' -', c, '->', present)
-    for div in target_women_divs:
-        if women_confs.get(div):
-            print(f"\nWomen {div} conferences added/seen: {len(women_confs[div])}")
-            for c in sorted(women_confs[div]):
-                present = 'present' if c in reloaded.get('women', {}).get(div, {}) else 'MISSING'
-                print(' -', c, '->', present)
-
-    return existing
-
-
 def main():
+    
+    print("Starting conference standings scraper...")
+    
     # allow quick test mode
     if len(sys.argv) > 1 and sys.argv[1].strip().lower() in ('test-io', 'test-gs', 'test'):
         validate_sheet_io()
         return
 
-    # allow interactive gathering of D2/D3 conference xpaths
-    if any(arg.strip().lower() in ('gather-xpaths', '--gather-xpaths', 'gather') for arg in sys.argv[1:]):
-        gather_division_conference_xpaths()
-        return
-
-    # support a non-interactive add-confs command to add men D3 and women D2/D3 conferences
-    if any(arg.strip().lower() in ('add-confs', '--add-confs') for arg in sys.argv[1:]):
-        add_conferences_from_sheet()
-        return
-
     # parse optional command-line args early so we can load the sheet with correct gender
     gender = 'men'
-    division = 'd1'
+    division = 'd2'
     for a in sys.argv[1:3]:
         if not a:
             continue
@@ -879,10 +570,26 @@ def main():
         elif aa in ('d1', 'd2', 'd3', 'naia'):
             division = aa
 
+    print("Running scrape for gender='%s' division='%s'" % (gender, division))
+
     # allow interactive conference mapping only when user passes -conference / --conference / -c
     confirm_conference = any(arg.strip().lower() in ('-conference', '--conference', '-c') for arg in sys.argv[1:])
 
     target = f"{division}_{gender}"
+
+    # Parse optional start/resume flags: --start-conference=<NAME> or -s <NAME>, and --force to reprocess
+    start_conference = None
+    force_reprocess = any(arg.strip().lower() in ('--force', '-f') for arg in sys.argv[1:])
+    for i, a in enumerate(sys.argv[1:]):
+        if a.startswith('--start-conference='):
+            start_conference = a.split('=', 1)[1].strip()
+        if a in ('--start-conference', '-s'):
+            # take next arg if available
+            if i + 2 <= len(sys.argv[1:]):
+                start_conference = sys.argv[1:][i+1].strip()
+
+    # completed_confs will be loaded from the progress file once it's read below
+    completed_confs = set()
 
     # If women, set output columns to AV/AW/AX
     if gender == 'women':
@@ -902,12 +609,14 @@ def main():
         print('Failed to setup Google Sheets client:', e)
         return
 
+    print("Loading university list from sheet...")
     # Load university list from sheet using gender-aware conference column
     universities, ws_universities = load_university_list(client, SHEET_ID, gender=gender)
     if not universities:
         print('No universities found in sheet. Aborting.')
         return
 
+    print("Checking progress file for pending writes...")
     # Progress file to remember pending writes and last processed index
     progress_file = os.path.join(os.path.dirname(__file__), '.conference_progress.json')
     try:
@@ -916,301 +625,842 @@ def main():
     except Exception:
         progress = {}
 
+    # Load completed conferences from progress for resume behavior
+    # We'll initialize an empty set here; per-division completed lists are populated
+    # after loading .division_conference_xpaths.json so we can auto-populate certain
+    # division/gender combinations from that file when desired.
+    completed_confs = set()
+
     # Attempt to flush any pending writes from previous run (rate-limit interrupted)
     flush_pending_writes(ws_universities, progress, progress_file)
 
     # Fetch and parse standings page
-    try:
-        html_text = fetch_page(URLS[target])
-        standings = parse_topdrawersoccer_table(html_text)
-        if not standings:
-            print('No standings data found.')
+    standings = []
+    if division == 'd1':
+        try:
+            html_text = fetch_page(URLS[target])
+            standings = parse_topdrawersoccer_table(html_text) or []
+            if not standings:
+                print('No standings data found for D1.')
+                return
+        except Exception as e:
+            print('Failed to fetch or parse D1 standings page:', e)
             return
+    else:
+        # D2/D3: we'll build standings from per-conference JSON entries below
+        standings = []
+
+    # If Division 2 or Division 3, use per-conference URLs/XPaths from .division_conference_xpaths.json
+    try:
+        div_xpath_file = os.path.join(os.path.dirname(__file__), '.division_conference_xpaths.json')
+        if os.path.exists(div_xpath_file):
+            with open(div_xpath_file, 'r', encoding='utf-8') as f:
+                print('Loading conference xpaths from', div_xpath_file)
+                div_xpaths = json.load(f)
+        else:
+            div_xpaths = {}
     except Exception as e:
-        print('Failed to fetch or parse standings page:', e)
+        print('Failed to load division xpaths file:', e)
+        div_xpaths = {}
+
+    division_label = None
+    if division == 'd2':
+        division_label = 'Division 2'
+    elif division == 'd3':
+        division_label = 'Division 3'
+
+    print("Checking JSON file for", division_label, "conference xpaths...")
+    # For D2/D3, prefer per-conference scrapes defined in JSON; D1 remains TopDrawerSoccer only
+    if division_label:
+        conf_map_entries = div_xpaths.get(gender, {}).get(division_label, {}) if div_xpaths else {}
+        print(f"Found {len(conf_map_entries)} conference entries for {gender} {division_label} in .division_conference_xpaths.json.")
+        per_conf_entries = []
+        processed_conferences = set()
+        # Diagnose when no usable per-conference entries exist
+        if not conf_map_entries:
+            print(f"No per-conference entries found in .division_conference_xpaths.json for {gender} {division_label}.")
+            print("You can add entries using: python3 scrape_conference_standings.py add-confs")
+        else:
+            usable = [c for c,info in conf_map_entries.items() if (info.get('url') or '').strip() and (info.get('xpath') or '').strip()]
+            if not usable:
+                print(f"Found {len(conf_map_entries)} conference entries for {gender} {division_label}, but none have both url and xpath set.")
+                print('Entries found (missing url/xpath marked):')
+                for c, info in conf_map_entries.items():
+                    has_url = bool((info.get('url') or '').strip())
+                    has_xpath = bool((info.get('xpath') or '').strip())
+                    status = []
+                    if has_url: status.append('url')
+                    if has_xpath: status.append('xpath')
+                    if not status:
+                        status = ['(no url/xpath)']
+                    print(f" - {c}: {', '.join(status)}")
+                print("To populate entries automatically from the sheet, run: python3 scrape_conference_standings.py add-confs")
+        
+        if conf_map_entries:
+            print("Beginning per-conference scraping...")
+            # cache of column mappings per URL or per conference
+            seen_start = False if start_conference else True
+            for conf_name, info in conf_map_entries.items():
+                # If a start_conference was provided, skip until we encounter it
+                if not seen_start:
+                    if conf_name != start_conference:
+                        print(f"Skipping conference '{conf_name}' until start-conference '{start_conference}' is reached.")
+                        continue
+                    else:
+                        print(f"Starting resume at conference '{conf_name}'")
+                        seen_start = True
+                # If this conference was previously completed and force_reprocess not set, skip it
+                if (conf_name in completed_confs) and not force_reprocess:
+                    print(f"Skipping already-completed conference '{conf_name}'. Use --force to reprocess.")
+                    continue
+                per_div_key = f"{division}_{gender}"
+                already_done = False
+                try:
+                    completed_list = progress.get(per_div_key, []) if isinstance(progress, dict) else []
+                    already_done = conf_name in completed_list
+                except Exception:
+                    completed_list = []
+                    already_done = False
+                if already_done and not force_reprocess:
+                    print(f"Skipping already-completed conference '{conf_name}' (per {per_div_key}). Use --force to reprocess.")
+                    continue
+                url = (info.get('url') or '').strip()
+                xpath = (info.get('xpath') or '').strip()
+
+                print(f"\nProcessing conference '{conf_name}' with URL '{url}'")
+
+                if not url or not xpath:
+                    continue
+                try:
+                    txt = fetch_page(url)
+                except Exception as e:
+                    print(f"Failed to fetch URL for conference '{conf_name}': {e}")
+                    continue
+
+                # removed stray try: directly import and parse with lxml
+                from lxml import html as lxml_html
+                tree = lxml_html.fromstring(txt)
+                nodes = tree.xpath(xpath)
+                if not nodes:
+                    print(f"XPath returned no nodes for conference '{conf_name}' at {url}")
+                    continue
+
+                # Determine whether this conference page is Sidearm-powered early so header
+                # detection can use the appropriate visible/th exclusion rules.
+                sidearm_flag = bool(info.get('sidearm')) if ('sidearm' in info) else (xpath == '/html/body/form/main/article/div[3]/table')
+                print(f"Sidearm Site: {sidearm_flag} for {conf_name}")
+
+                # attempt to detect header and table rows
+                rows = []
+                header_cells = None
+                header_row_idx = None
+                # positions/text for visible headers (th elements we consider for col_map_indices)
+                header_visible_positions = None
+                header_visible = None
+                for node in nodes:
+                    # prefer table nodes under node
+                    table_nodes = []
+                    if getattr(node, 'tag', '').lower() == 'table':
+                        table_nodes = [node]
+                    else:
+                        table_nodes = node.xpath('.//table') or []
+
+                    if table_nodes:
+                        for t in table_nodes:
+                            trs = t.xpath('.//tr')
+                            if not trs:
+                                continue
+                            # Allow the user to explicitly pick which <tr> is the header row.
+                            # If a saved header_row exists in the JSON entry, use it without prompting.
+                            user_header_choice = None
+                            try:
+                                saved_hr = info.get('header_row')
+                                if isinstance(saved_hr, int) and 0 <= saved_hr < len(trs):
+                                    user_header_choice = int(saved_hr)
+                                    print(f"Using saved header_row={user_header_choice} for conference '{conf_name}'")
+                                else:
+                                    preview_n = min(3, len(trs))
+                                    print(f"\nPreview of first {preview_n} rows for conference '{conf_name}':")
+                                    for ri in range(preview_n):
+                                        cells_preview = [c.text_content().strip() for c in trs[ri].xpath('./th|./td')]
+                                        print(f" {ri}) {cells_preview}")
+                                    ans = input('Enter header row index (0-based) to use, or press Enter to auto-detect: ').strip()
+                                    if ans.isdigit():
+                                        ui = int(ans)
+                                        if 0 <= ui < len(trs):
+                                            user_header_choice = ui
+                                            info['header_row'] = int(ui)
+                                            try:
+                                                with open(div_xpath_file, 'w', encoding='utf-8') as f:
+                                                    json.dump(div_xpaths, f, indent=2)
+                                                print(f"Saved header_row={ui} for '{conf_name}' to {div_xpath_file}")
+                                            except Exception:
+                                                print('Failed to save header_row to JSON file')
+                            except Exception:
+                                user_header_choice = None
+                            # detect header: look for th in first rows
+                            # Choose the best header row among the first few rows. Prefer a row
+                            # containing <th> with the largest number of non-empty header cells.
+                            # If no <th> rows are found, fall back to a <td> row that looks header-like
+                            # (majority alphabetic cells). If the user specified a header row, honor it.
+                            best_idx = None
+                            best_score = -1
+                            if user_header_choice is not None:
+                                best_idx = user_header_choice
+                                best_score = 1
+                            else:
+                                for j, tr in enumerate(trs[:3]):
+                                    th_nodes = tr.xpath('./th')
+                                    if th_nodes:
+                                        texts = [th.text_content().strip() for th in th_nodes]
+                                        score = sum(1 for t in texts if t)
+                                    else:
+                                        td_nodes = tr.xpath('./td')
+                                        texts = [td.text_content().strip() for td in td_nodes]
+                                        nonempty = sum(1 for t in texts if t)
+                                        alpha = sum(1 for t in texts if re.search(r'[A-Za-z]', t))
+                                        score = alpha if nonempty > 0 and (alpha / nonempty) >= 0.5 else 0
+                                    if score > best_score:
+                                        best_score = score
+                                        best_idx = j
+
+                            if best_idx is not None and best_score > 0:
+                                tr = trs[best_idx]
+                                # all header texts (th or td fallback)
+                                header_nodes = tr.xpath('./th|./td')
+                                header_cells = [cell.text_content().strip() for cell in header_nodes]
+                                # Collect data rows following the chosen header row so we have sample rows
+                                rows = []
+                                for data_tr in trs[best_idx+1:]:
+                                    data_tds = [td.text_content().strip() for td in data_tr.xpath('./td')]
+                                    if data_tds:
+                                        rows.append(data_tds)
+                                # Determine visible header positions among all header nodes. Prefer
+                                # nodes with class 'hide-on-medium-down' when present (Sidearm).
+                                visible_positions = []
+                                visible_texts = []
+                                for pos, node in enumerate(header_nodes):
+                                    # Only th nodes carry the classes we care about
+                                    try:
+                                        tag = getattr(node, 'tag', '')
+                                    except Exception:
+                                        tag = ''
+                                    cls = (node.get('class') or '') if tag else ''
+                                    if 'hide-on-medium-down' in cls:
+                                        visible_positions.append(pos)
+                                        visible_texts.append(node.text_content().strip())
+
+                                # If none explicitly marked, decide behavior based on Sidearm flag.
+                                if not visible_positions:
+                                    if sidearm_flag:
+                                        # Sidearm: exclude nodes with 'hide-on-large' class
+                                        for pos, node in enumerate(header_nodes):
+                                            cls = (node.get('class') or '')
+                                            if 'hide-on-large' in cls:
+                                                continue
+                                            visible_positions.append(pos)
+                                            visible_texts.append(node.text_content().strip())
+                                    else:
+                                        # Non-Sidearm: treat all header positions as visible
+                                        for pos, node in enumerate(header_nodes):
+                                            visible_positions.append(pos)
+                                            visible_texts.append(node.text_content().strip())
+
+                                print("Visible Headers:", visible_texts)
+                                header_visible_positions = visible_positions
+                                header_visible = visible_texts
+                                header_row_idx = best_idx
+                                break
+                        # If we found header_cells, break out of the outer nodes loop as well
+                        if header_cells is not None:
+                            break
+                    else:
+                        # node is container: find tr elements
+                        trs = node.xpath('.//tr')
+                        if not trs:
+                            continue
+                        # detect header similarly
+                        for i, tr in enumerate(trs[:3]):
+                            ths = tr.xpath('.//th')
+                            if ths:
+                                header_cells = [th.text_content().strip() for th in tr.xpath('./th|./td')]
+                                header_row_idx = i
+                                break
+                        if header_cells is None:
+                            first_texts = [td.text_content().strip() for td in trs[0].xpath('./td')]
+                            if first_texts and any(re.search(r'[A-Za-z]', t) for t in first_texts):
+                                header_cells = first_texts
+                                header_row_idx = 0
+                        data_trs = trs[(header_row_idx + 1) if header_row_idx is not None else 1:]
+                        for tr in data_trs:
+                            cells = [td.text_content().strip() for td in tr.xpath('./td')]
+                            rows.append(cells)
+
+                # If header_cells not detected, try to infer by length from first row
+                if header_cells is None and rows:
+                    # create generic headers: col1, col2, ...
+                    maxlen = max(len(r) for r in rows)
+                    header_cells = [f'col{idx+1}' for idx in range(maxlen)]
+                    
+                # Build or retrieve column mapping for this conference
+                hdr = header_cells or []
+
+                # Map visible indices (user-provided) to actual header positions using header_visible_positions
+                # Initialize col_map from existing info to avoid UnboundLocalError
+                col_map = info.get('col_map') or None
+                raw_col_indices = info.get('col_map_indices') or {}
+                # Whether the mapping indices came from an explicit source (JSON or manual prompt).
+                explicit_indices_provided = bool(raw_col_indices)
+                mapped_indices = {}
+
+                # Ensure header_positions_for_visible is defined for mapping raw indices
+                header_positions_for_visible = None
+                if sidearm_flag:
+                    header_positions_for_visible = header_visible_positions or list(range(len(hdr)))
+                else:
+                    header_positions_for_visible = list(range(len(hdr)))
+
+                # If this is a non-Sidearm site, prefer a simple manual mapping of true
+                # 0-based header indices: present the headers and ask the user to enter
+                # the column indices to use. Persist the choice into info so it is
+                # reused on subsequent runs.
+                if not sidearm_flag and header_cells:
+                    print(f"\nNon-Sidearm site detected for '{conf_name}'. Please map columns by true 0-based header index:")
+                    for i_h, hname in enumerate(hdr):
+                        print(f" {i_h}) {hname}")
+
+                    def prompt_idx(prompt_text, allow_blank=False):
+                        while True:
+                            ans = input(prompt_text).strip()
+                            if allow_blank and ans == '':
+                                return None
+                            if ans.isdigit():
+                                v = int(ans)
+                                if 0 <= v < len(hdr):
+                                    return v
+                            print(f"Enter a number between 0 and {len(hdr)-1}{', or blank' if allow_blank else ''}.")
+
+                    s_idx = prompt_idx(' School column index (0-based): ')
+                    if s_idx is None:
+                        print('School column is required for manual mapping. Skipping this conference.')
+                        continue
+                    cr_idx = prompt_idx(' Conference-record column index (0-based, or blank to skip): ', allow_blank=True)
+                    or_idx = prompt_idx(' Overall-record column index (0-based, or blank to skip): ', allow_blank=True)
+                    st_idx = prompt_idx(' Standing column index (0-based, or blank to use row number): ', allow_blank=True)
+
+                    # Build col_map using actual hdr names and persist indices
+                    col_map = {}
+                    col_map[hdr[s_idx]] = 'school'
+                    if cr_idx is not None:
+                        col_map[hdr[cr_idx]] = 'conf_record'
+                    if or_idx is not None:
+                        col_map[hdr[or_idx]] = 'overall_record'
+                    if st_idx is not None:
+                        col_map[hdr[st_idx]] = 'standing'
+
+                    info['col_map'] = col_map
+                    col_map_indices = {}
+                    col_map_indices['school'] = int(s_idx)
+                    if cr_idx is not None:
+                        col_map_indices['conf_record'] = int(cr_idx)
+                    if or_idx is not None:
+                        col_map_indices['overall_record'] = int(or_idx)
+                    if st_idx is not None:
+                        col_map_indices['standing'] = int(st_idx)
+                    info['col_map_indices'] = col_map_indices
+                    try:
+                        with open(div_xpath_file, 'w', encoding='utf-8') as f:
+                            json.dump(div_xpaths, f, indent=2)
+                    except Exception:
+                        pass
+                    # Also set mapped_indices so extraction uses this mapping now
+                    mapped_indices = {}
+                    for k, v in col_map_indices.items():
+                        mapped_indices[k] = int(v)
+                    explicit_indices_provided = True
+
+                # If no pre-existing col_map, and explicit indices exist for at least the required
+                # columns (and headers are available), construct a mapping from header name -> field
+                # using the provided mapped indices. Persist so future runs won't prompt.
+                if not col_map and hdr and mapped_indices:
+                    print("Found explicit column indices for conference '%s' (visible->actual): %s" % (conf_name, mapped_indices))
+                    valid_indices = {k: v for k, v in mapped_indices.items() if isinstance(v, int) and 0 <= v < len(hdr)}
+                    required_keys = ('school', 'conf_record', 'overall_record')
+                    if all(k in valid_indices for k in required_keys):
+                        inferred = {}
+                        for key in ('school', 'conf_record', 'overall_record', 'pts'):
+                            idx = valid_indices.get(key)
+                            if isinstance(idx, int) and 0 <= idx < len(hdr):
+                                inferred[hdr[idx]] = key
+                        if inferred:
+                            col_map = inferred
+                            info['col_map'] = col_map
+                            try:
+                                with open(div_xpath_file, 'w', encoding='utf-8') as f:
+                                    json.dump(div_xpaths, f, indent=2)
+                            except Exception:
+                                pass
+
+                # If still no col_map, attempt auto-mapping by keywords over VISIBLE headers and finally fall back
+                if not col_map and header_cells:
+                    # build visible lists
+                    visible_positions = header_visible_positions or list(range(len(hdr)))
+                    visible_display = header_visible or [hdr[i] for i in visible_positions]
+
+                    # attempt auto-mapping by keywords over visible headers first
+                    auto_map = {}
+                    keywords = {
+                        'school': ['school', 'team', 'institution', 'university', 'college', 'teamname'],
+                        'conf_record': ['conf', 'conference record', 'conf_record', 'conference_record', 'conference'],
+                        'overall_record': ['overall', 'overall record', 'overall_record', 'record'],
+                        'standing': ['standing', 'place', 'pos', 'position', 'rank']
+                    }
+                    for i_v, h in enumerate(visible_display):
+                        hn = (h or '').lower()
+                        mapped = None
+                        for key, keys in keywords.items():
+                            for k in keys:
+                                if k in hn:
+                                    mapped = key
+                                    break
+                            if mapped:
+                                break
+                        if mapped:
+                            # map using actual hdr name for consistency
+                            actual_idx = visible_positions[i_v]
+                            auto_map[hdr[actual_idx]] = mapped
+
+                    if 'school' in auto_map and ('conf_record' in auto_map or 'overall_record' in auto_map or 'standing' in auto_map):
+                        col_map = auto_map
+                        info['col_map'] = col_map
+                        try:
+                            with open(div_xpath_file, 'w', encoding='utf-8') as f:
+                                json.dump(div_xpaths, f, indent=2)
+                        except Exception:
+                            pass
+                    else:
+                        # Interactive prompt: show visible headers with visible 0-based indices
+                        print(f"\nDetected visible columns for conference '{conf_name}' at {url} (visible 0-based indices):")
+                        for i_v, h in enumerate(visible_display):
+                            print(f" {i_v}) {h}")
+
+                        def prompt_visible_index(prompt_text, allow_blank=False):
+                            while True:
+                                ans = input(prompt_text).strip()
+                                if allow_blank and ans == '':
+                                    return None
+                                if ans.isdigit():
+                                    vidx = int(ans)
+                                    if 0 <= vidx < len(visible_display):
+                                        actual_idx = visible_positions[vidx]
+                                        return vidx, actual_idx
+                                print(f"Enter a number between 0 and {len(visible_display)-1}{', or blank' if allow_blank else ''}.")
+
+                        while True:
+                            print('\nEnter the visible column number for the following fields:')
+                            s_res = prompt_visible_index(" School column number (visible 0-based): ")
+                            cr_res = prompt_visible_index(" Conference-record column number (visible 0-based, or blank to skip): ", allow_blank=True)
+                            or_res = prompt_visible_index(" Overall-record column number (visible 0-based, or blank to skip): ", allow_blank=True)
+                            st_res = prompt_visible_index(" Standing column number (visible 0-based, or blank to use row number): ", allow_blank=True)
+
+                            def _unpack(res):
+                                if res is None:
+                                    return (None, None)
+                                return res
+
+                            s_vidx, s_actual = _unpack(s_res)
+                            cr_vidx, cr_actual = _unpack(cr_res)
+                            or_vidx, or_actual = _unpack(or_res)
+                            st_vidx, st_actual = _unpack(st_res)
+
+                            chosen_actuals = [i for i in (s_actual, cr_actual, or_actual) if i is not None]
+                            if st_actual is not None:
+                                chosen_actuals.append(st_actual)
+                            if len(chosen_actuals) != len(set(chosen_actuals)):
+                                print('Duplicate column selections detected; please choose distinct columns.')
+                                continue
+                            if s_actual is None:
+                                print('School column is required.')
+                                continue
+                            break
+
+                        # Build col_map using actual hdr indices
+                        col_map = {}
+                        col_map[hdr[s_actual]] = 'school'
+                        if cr_actual is not None:
+                            col_map[hdr[cr_actual]] = 'conf_record'
+                        if or_actual is not None:
+                            col_map[hdr[or_actual]] = 'overall_record'
+                        if st_actual is not None:
+                            col_map[hdr[st_actual]] = 'standing'
+
+                        info['col_map'] = col_map
+                        # Persist visible 0-based indices into col_map_indices for future runs
+                        col_map_indices = info.get('col_map_indices') or {}
+                        if s_vidx is not None:
+                            col_map_indices['school'] = int(s_vidx)
+                        if cr_vidx is not None:
+                            col_map_indices['conf_record'] = int(cr_vidx)
+                        if or_vidx is not None:
+                            col_map_indices['overall_record'] = int(or_vidx)
+                        if st_vidx is not None:
+                            col_map_indices['standing'] = int(st_vidx)
+                        info['col_map_indices'] = col_map_indices
+                        try:
+                            with open(div_xpath_file, 'w', encoding='utf-8') as f:
+                                json.dump(div_xpaths, f, indent=2)
+                        except Exception:
+                            pass
+
+                # Detect PTS/Points column index if present in headers
+                pts_col_idx = None
+                # prefer explicit mapped_indices (actual hdr indices)
+                if isinstance(mapped_indices, dict) and 'pts' in mapped_indices:
+                    pidx = mapped_indices.get('pts')
+                    if isinstance(pidx, int) and 0 <= pidx < len(hdr):
+                        pts_col_idx = pidx
+                if pts_col_idx is None:
+                    for i_h, hname in enumerate(hdr):
+                        if hname and re.search(r"\b(c?pts?|points?)\b", hname, flags=re.IGNORECASE):
+                            pts_col_idx = i_h
+                            break
+
+                # Prepare header usage counters to support duplicate header names mapping to multiple fields
+                header_usage = {}
+                conf_entries = []
+
+                # Normalize name-based col_map keys once
+                raw_col_names = info.get('col_map_names') or info.get('col_map') or {}
+                col_names_norm = {}
+                try:
+                    for k, v in raw_col_names.items():
+                        nk = re.sub(r"[\[\(].*?[\]\)]", "", (k or ''))
+                        nk = re.sub(r"\s+", " ", nk).strip().lower()
+                        col_names_norm[nk] = v
+                except Exception:
+                    col_names_norm = {}
+
+                # visible positions fallback
+                visible_positions = header_visible_positions or list(range(len(hdr)))
+
+                # mapped_indices previously computed map visible indices->actual hdr indices
+                effective_indices = mapped_indices if isinstance(mapped_indices, dict) and mapped_indices else {}
+
+                for ridx, cells in enumerate(rows, start=1):
+                    rowvals = {}
+                    # Apply explicit indices first (these are actual hdr indices).
+                    # If the extracted value doesn't look like the expected type (e.g. a
+                    # school name should contain letters), try to find a better column
+                    # in the same row. This helps when header th/td counts don't align
+                    # exactly with data td counts.
+                    if effective_indices:
+                        for field, actual_idx in effective_indices.items():
+                            try:
+                                if not (isinstance(actual_idx, int) and 0 <= actual_idx < len(cells)):
+                                    continue
+                                val = cells[actual_idx].strip()
+                                if explicit_indices_provided:
+                                    # Use explicit indices verbatim when provided by JSON or manual input.
+                                    rowvals[field] = val
+                                    continue
+                                # Basic validation heuristics when indices are not explicit
+                                # (allow auto-correction if the value doesn't match expectations).
+                                if field == 'school':
+                                    if not re.search(r'[A-Za-z]', val):
+                                        # find first column with alphabetic content
+                                        found = False
+                                        for j, c in enumerate(cells):
+                                            if re.search(r'[A-Za-z]', c):
+                                                val = c.strip()
+                                                actual_idx = j
+                                                found = True
+                                                break
+                                        if not found:
+                                            pass
+                                elif field in ('conf_record', 'overall_record'):
+                                    # expect patterns like '9-1-2' or '9-1'
+                                    if not re.search(r'\d+\s*[-–]\s*\d+', val):
+                                        # try to find a nearby column that looks like a record
+                                        found = False
+                                        for j, c in enumerate(cells):
+                                            if re.search(r'\d+\s*[-–]\s*\d+', c):
+                                                val = c.strip()
+                                                actual_idx = j
+                                                found = True
+                                                break
+                                        if not found:
+                                            pass
+                                # assign validated/adjusted value
+                                rowvals[field] = val
+                            except Exception:
+                                pass
+
+                    # Name-based mapping: only consider visible header positions
+                    for vp in visible_positions:
+                        if vp < 0 or vp >= len(hdr):
+                            continue
+                        header_name = hdr[vp] or ''
+                        val = cells[vp] if vp < len(cells) else ''
+                        src_norm = re.sub(r"[\[\(].*?[\]\)]", "", header_name).strip().lower()
+                        mapped = col_names_norm.get(src_norm)
+                        if mapped is None:
+                            # fallback to legacy exact header key lookup
+                            mapped = (info.get('col_map') or {}).get(header_name)
+                        if not mapped:
+                            continue
+                        if isinstance(mapped, list):
+                            used = header_usage.get(src_norm, 0)
+                            if used < len(mapped):
+                                target = mapped[used]
+                            else:
+                                target = mapped[-1]
+                            header_usage[src_norm] = used + 1
+                            if target and target not in rowvals:
+                                rowvals[target] = val.strip()
+                        else:
+                            if mapped not in rowvals:
+                                rowvals[mapped] = val.strip()
+
+                    # capture pts value: prefer explicit effective_indices then detected pts_col_idx
+                    pts_val = None
+                    if isinstance(effective_indices, dict) and 'pts' in effective_indices:
+                        pidx = effective_indices.get('pts')
+                        if isinstance(pidx, int) and pidx < len(cells):
+                            raw_pts = cells[pidx]
+                            m = re.search(r"([-+]?[0-9]*\.?[0-9]+)", raw_pts or '')
+                            if m:
+                                try:
+                                    pts_val = float(m.group(1))
+                                except Exception:
+                                    pts_val = None
+                    elif pts_col_idx is not None and pts_col_idx < len(cells):
+                        raw_pts = cells[pts_col_idx]
+                        m = re.search(r"([-+]?[0-9]*\.?[0-9]+)", raw_pts or '')
+                        if m:
+                            try:
+                                pts_val = float(m.group(1))
+                            except Exception:
+                                pts_val = None
+                    if pts_val is not None:
+                        rowvals['pts'] = pts_val
+
+                    # ensure school present: prefer explicit 'school', then first VISIBLE column, then first column overall
+                    school = rowvals.get('school')
+                    if not school:
+                        if visible_positions:
+                            first_vis = visible_positions[0]
+                            if first_vis < len(cells):
+                                school = cells[first_vis]
+                        if not school and len(cells) > 0:
+                            school = cells[0]
+                    school = re.sub(r"[\[\(].*?[\]\)]", "", (school or '')).replace('*', '').strip()
+                    if school:
+                        rowvals['school'] = school
+
+                    conf_record = rowvals.get('conf_record', '')
+                    overall = rowvals.get('overall_record', '')
+                    standing = rowvals.get('standing')
+                    if not standing:
+                        standing = str(ridx)
+
+                    if not rowvals.get('school'):
+                        continue
+
+                    entry_obj = {'conference': conf_name, 'standing': standing, 'school': rowvals.get('school'), 'conf_record': conf_record, 'overall_record': overall}
+                    if 'pts' in rowvals:
+                        entry_obj['pts'] = rowvals['pts']
+                    conf_entries.append(entry_obj)
+
+                # If a PTS column was detected and entries have pts, compute standings by sorting by pts desc
+                try:
+                    if any('pts' in e for e in conf_entries):
+                        indexed = list(enumerate(conf_entries))
+                        # sort by pts desc, then original order as tiebreaker
+                        sorted_by_pts = sorted(indexed, key=lambda x: (-(x[1].get('pts') or 0.0), x[0]))
+                        for rank, (orig_i, _e) in enumerate(sorted_by_pts, start=1):
+                            conf_entries[orig_i]['standing'] = str(rank)
+                        print(f"Assigned standings for '{conf_name}' by PTS column (desc).")
+                except Exception:
+                    pass
+
+                # Present assumed mappings for the conference (auto top-1) and allow batch review
+                if not conf_entries:
+                    continue
+
+                assumed = []  # list of (row, name, score) or None
+                for entry in conf_entries:
+                    sname = entry.get('school')
+                    cands = find_best_candidates(sname, universities, top_n=1, preferred_conf=conf_name)
+                    if cands:
+                        assumed.append(cands[0])
+                    else:
+                        assumed.append(None)
+
+                print(f"\nAssumed mappings for conference '{conf_name}':")
+                for i, (entry, asp) in enumerate(zip(conf_entries, assumed), start=1):
+                    s = entry.get('school')
+                    conf_rec = entry.get('conf_record','') or ''
+                    overall = entry.get('overall_record','') or ''
+                    standing = entry.get('standing','') or ''
+                    if asp:
+                        r, mname, score = asp
+                        print(f" {i}) {s} ^ -> {mname} (score={score:.3f})  [{conf_rec} / {overall} / standing {standing}]")
+                    else:
+                        print(f" {i}) {s} ^ -> (no candidate)  [{conf_rec} / {overall} / standing {standing}]")
+
+                sel = input('Enter comma-separated numbers to FIX (or Enter to accept all, or "a" to accept all): ').strip()
+                to_fix = set()
+                if sel and sel.lower() != 'a':
+                    parts = [p for p in re.split(r"[,\s]+", sel) if p]
+                    for p in parts:
+                        if '-' in p:
+                            a, b = p.split('-', 1)
+                            if a.isdigit() and b.isdigit():
+                                for n in range(int(a), int(b) + 1):
+                                    if 1 <= n <= len(conf_entries):
+                                        to_fix.add(n-1)
+                        elif p.isdigit():
+                            n = int(p)
+                            if 1 <= n <= len(conf_entries):
+                                to_fix.add(n-1)
+
+                # Prepare chosen_mappings: for entries not in to_fix, accept assumed; for entries in to_fix (or where no assumed candidate), run interactive_confirm
+                chosen_mappings = {}
+                for idx_e, entry in enumerate(conf_entries):
+                    sname = entry.get('school')
+                    # Decide whether to prompt for this entry:
+                    # - If the user entered 'a' or blank, accept assumed mapping when available.
+                    # - If the user specified particular indices (to_fix), prompt only those indices.
+                    # - Always prompt when there is no assumed candidate.
+                    if assumed[idx_e] is None:
+                        # no auto candidate -> prompt
+                        cands = find_best_candidates(sname, universities, top_n=10, preferred_conf=conf_name)
+                        mapping = interactive_confirm(sname, cands, universities, scraped_conf=conf_name)
+                        if mapping:
+                            chosen_mappings[idx_e] = mapping
+                        else:
+                            print(f"No mapping confirmed for '{sname}'; this team will be skipped.")
+                        continue
+
+                    # At this point we have an assumed candidate. If the user asked to fix specific indices,
+                    # only prompt those; otherwise accept the assumed mapping.
+                    if idx_e in to_fix:
+                        cands = find_best_candidates(sname, universities, top_n=10, preferred_conf=conf_name)
+                        mapping = interactive_confirm(sname, cands, universities, scraped_conf=conf_name)
+                        if mapping:
+                            chosen_mappings[idx_e] = mapping
+                        else:
+                            print(f"No mapping confirmed for '{sname}'; this team will be skipped.")
+                    else:
+                        # accept assumed mapping
+                        chosen_mappings[idx_e] = (assumed[idx_e][0], assumed[idx_e][1])
+
+                # Perform updates for all mapped entries for this conference
+                for idx_e, entry in enumerate(conf_entries):
+                    mapping = chosen_mappings.get(idx_e)
+                    if not mapping:
+                        continue
+                    target_row, matched_name = mapping
+                    update_data = {
+                        'conf_record': '' if entry.get('conf_record') is None else str(entry.get('conf_record')),
+                        'overall_record': '' if entry.get('overall_record') is None else str(entry.get('overall_record')),
+                        'standing': '' if entry.get('standing') is None else str(entry.get('standing')),
+                    }
+                    ok = update_university_record(ws_universities, target_row, update_data, progress, progress_file)
+                    if not ok:
+                        print(f"Update for row {target_row} failed or was deferred (rate limit).")
+                    time.sleep(1)
+
+                # mark this conference as completed in progress
+                completed_confs.add(conf_name)
+                progress['completed_conferences'] = list(completed_confs)
+                try:
+                    with open(progress_file, 'w') as f:
+                        json.dump(progress, f)
+                except Exception:
+                    pass
+    # If we have no standings at this point, something went wrong
+    if not standings:
+        print('No standings data available after parsing. Aborting.')
         return
 
-    page_key = target
-    start_idx = int(progress.get(page_key, 0))
-    print(f'Resuming from index {start_idx}')
+    # --- Begin interactive mapping of scraped standings to sheet rows ---
+    print('\nBeginning interactive mapping of scraped standings to sheet...')
+    for idx, entry in enumerate(standings, start=1):
+        # periodic progress output
+        if idx > 1 and idx % 10 == 0:
+            print(f"Processed {idx} scraped entries...")
 
-    # --- Load conference name mappings (assume mappings already completed); do not print them ---
-    # collect unique scraped conferences (preserve order)
-    scraped_confs = []
-    for ent in standings:
-        c = (ent.get('conference') or '').strip()
-        if c and c not in scraped_confs:
-            scraped_confs.append(c)
+        conf_name = (entry.get('conference') or '').strip()
+        scraped_school = (entry.get('school') or '').strip()
+        scraped_conf_record = entry.get('conf_record', '')
+        scraped_overall_record = entry.get('overall_record', '')
+        scraped_standing = entry.get('standing', '')
 
-    # collect unique sheet conferences (D1 conferences only) and sort alphabetically
-    sheet_confs = sorted({conf for (_r, _n, conf) in universities if conf}, key=lambda s: s.lower())
-
-    # Load existing mapping if present; do not interactively ask
-    map_file = os.path.join(os.path.dirname(__file__), '.conference_map.json')
-    try:
-        with open(map_file, 'r') as f:
-            conf_map = json.load(f)
-    except Exception:
-        conf_map = {}
-
-    # Interactive conference mapping is performed for men only when the user requests it
-    if gender == 'men' and confirm_conference:
-         # Build display rows with suggested matches and existing mappings
-         display = []
-         for sc in scraped_confs:
-             suggested = None
-             best_score = -1.0
-             for sconf in sheet_confs:
-                 s = combined_similarity(sc, sconf)
-                 if s > best_score:
-                     best_score = s
-                     suggested = sconf
-             existing = conf_map.get(sc, '')
-             display.append({'scraped': sc, 'suggested': suggested, 'score': best_score, 'existing': existing})
-
-         # Print numbered list
-         print('\nScraped conferences and suggested sheet mappings:')
-         for i, d in enumerate(display, start=1):
-             existing_note = f" [existing -> '{d['existing']}']" if d['existing'] else ''
-             print(f"{i}) '{d['scraped']}' -> suggested: '{d['suggested']}' (score={d['score']:.3f}){existing_note}")
-
-         to_edit = input("Enter comma-separated numbers to edit specific mappings (or Enter to accept all suggestions): ").strip()
-         edit_indices = [int(x.strip()) for x in to_edit.split(',') if x.strip().isdigit()] if to_edit else []
-
-         # Apply suggestions or edit selected ones
-         for idx, d in enumerate(display, start=1):
-             sc = d['scraped']
-             if idx not in edit_indices:
-                 # apply existing mapping if present, else suggested
-                 if d['existing']:
-                     conf_map[sc] = d['existing']
-                 else:
-                     conf_map[sc] = d['suggested'] or ''
-                 continue
-
-             # User chose to edit this mapping
-             print(f"\nEditing mapping for scraped conference '{sc}'")
-             print('Available sheet conferences (alphabetical):')
-             for i, sconf in enumerate(sheet_confs, start=1):
-                 print(f"{i}) {sconf}")
-             ans = input("Choose number to map, 'm' to show suggestions, 'e' to enter manual, or Enter to skip: ").strip().lower()
-             if ans.isdigit():
-                 p = int(ans)
-                 if 1 <= p <= len(sheet_confs):
-                     conf_map[sc] = sheet_confs[p-1]
-                     continue
-             if ans == 'm':
-                 # show top 10 suggestions (by similarity)
-                 scored = [(sconf, combined_similarity(sc, sconf)) for sconf in sheet_confs]
-                 scored.sort(key=lambda x: x[1], reverse=True)
-                 for i, (sconf, s) in enumerate(scored[:10], start=1):
-                     print(f"{i}) {sconf} (score={s:.3f})")
-                 pick = input('Choose number to accept (or Enter to cancel): ').strip()
-                 if pick.isdigit():
-                     p = int(pick)
-                     if 1 <= p <= min(10, len(scored)):
-                         conf_map[sc] = scored[p-1][0]
-                         continue
-                 print('No selection made; leaving mapping empty for now.')
-                 conf_map[sc] = ''
-                 continue
-             if ans == 'e':
-                 manual = input('Type manual sheet conference name (exact as in sheet) or Enter to skip: ').strip()
-                 if manual:
-                     conf_map[sc] = manual
-                 else:
-                     conf_map[sc] = ''
-                 continue
-             # default: skip / leave empty
-             conf_map[sc] = ''
-
-         # Save conference mapping
-         try:
-             with open(map_file, 'w') as f:
-                 json.dump(conf_map, f)
-             print('\nSaved conference mappings to', map_file)
-         except Exception as e:
-             print('Warning: could not save conference mapping:', e)
-    else:
-        if gender == 'men' and not confirm_conference:
-            print("Interactive conference mapping skipped. To enable mapping confirmation, run with the '-conference' flag.")
-
-    # Determine start conference from command-line (optional third/fourth arg)
-    start_conf = None
-    if len(sys.argv) > 3:
-        start_conf = sys.argv[3].strip()
-    # normalize for comparisons
-    start_conf_norm = (start_conf or '').strip().lower() if start_conf else None
-
-    # Determine which conferences are already completed for this page_key
-    completed = progress.get('completed_confs', {})
-    # Use normalized lowercase conference names for robust comparisons
-    completed_for_page = set([c.strip().lower() for c in completed.get(page_key, [])]) if completed else set()
-
-    # If a start conference was provided, force restart from that conference by clearing
-    # any completed markers for that conference and any that come after it in the
-    # scraped conferences ordering.
-    if start_conf_norm:
-        # Find the index of the start conference in the scraped conferences list
-        start_idx = None
-        try:
-            # 1) exact normalized match
-            start_idx = next((i for i, c in enumerate(scraped_confs) if c.strip().lower() == start_conf_norm), None)
-            # 2) containment (user provided shorter or longer form)
-            if start_idx is None:
-                start_idx = next((i for i, c in enumerate(scraped_confs) if start_conf_norm in (c or '').strip().lower() or (c or '').strip().lower() in start_conf_norm), None)
-            # 3) fuzzy match fallback
-            if start_idx is None:
-                scores = [(i, combined_similarity(start_conf_norm, (c or '').strip().lower())) for i, c in enumerate(scraped_confs)]
-                scores.sort(key=lambda x: x[1], reverse=True)
-                if scores and scores[0][1] >= 0.65:
-                    start_idx = scores[0][0]
-        except Exception:
-            start_idx = None
-
-        if start_idx is not None:
-            # Build a normalized set of conferences to clear
-            to_clear_norm = set(c.strip().lower() for c in scraped_confs[start_idx:])
-            old_list = completed.get(page_key, [])
-            # Remove any completed entries whose normalized form is in to_clear_norm
-            new_list = [c for c in old_list if c.strip().lower() not in to_clear_norm]
-            if new_list != old_list:
-                completed[page_key] = new_list
-                progress['completed_confs'] = completed
-                # persist the change immediately
-                try:
-                    with open(progress_file, 'w') as f:
-                        json.dump(progress, f)
-                    print(f"Cleared completed markers for {page_key} from '{start_conf}' onward ({len(old_list)-len(new_list)} removed)")
-                except Exception as e:
-                    print('Warning: failed to update progress file when clearing completed conferences:', e)
-                # Recompute the in-memory completed_for_page so subsequent checks use the updated list
-                completed_for_page = set([c.strip().lower() for c in completed.get(page_key, [])]) if completed else set()
-        else:
-            # If we couldn't locate the start conference among scraped_confs, still try to remove
-            # any completed entries that match the start_conf by normalized containment.
-            old_list = completed.get(page_key, [])
-            new_list = [c for c in old_list if start_conf_norm not in c.strip().lower()]
-            if new_list != old_list:
-                completed[page_key] = new_list
-                progress['completed_confs'] = completed
-                try:
-                    with open(progress_file, 'w') as f:
-                        json.dump(progress, f)
-                    print(f"Cleared completed markers for {page_key} matching '{start_conf}' ({len(old_list)-len(new_list)} removed)")
-                except Exception as e:
-                    print('Warning: failed to update progress file when clearing completed conferences:', e)
-                completed_for_page = set([c.strip().lower() for c in completed.get(page_key, [])]) if completed else set()
-            else:
-                print(f"Warning: start conference '{start_conf}' not found among scraped conferences; no completed markers cleared.")
-
-    # Group standings by conference preserving original order
-    conf_groups = {}
-    for idx, ent in enumerate(standings):
-        conf = (ent.get('conference') or '').strip()
-        conf_groups.setdefault(conf, []).append((idx, ent))
-
-    # Process each conference group: batch suggest school mappings then allow corrections
-    started = False if start_conf_norm else True
-    for conf_name, entries in conf_groups.items():
-        # If start_conf specified, skip until we reach it
-        if start_conf_norm and not started:
-            if conf_name.strip().lower() != start_conf_norm:
-                print(f"Skipping conference '{conf_name}' until start conference ('{start_conf}') is reached")
-                continue
-            else:
-                started = True
-
-        # skip conferences already marked completed
-        conf_norm = conf_name.strip().lower()
-        if conf_norm in completed_for_page and not (start_conf_norm and conf_norm == start_conf_norm):
-            print(f"Conference '{conf_name}' already completed for {page_key}; skipping")
+        if not scraped_school:
+            print(f"Skipping empty school entry at index {idx}.")
             continue
 
-        mapped_sheet_conf = conf_map.get(conf_name, '')
-        print(f"\nProcessing conference: '{conf_name}' -> mapped sheet conference: '{mapped_sheet_conf}'")
-        # build filtered universities list for this conference if mapping present
-        if mapped_sheet_conf:
-            filtered_unis = [u for u in universities if (u[2] or '').strip().lower() == mapped_sheet_conf.lower()]
+        print(f"\nScraped: '{scraped_school}' (Conference: '{conf_name}') -> {scraped_conf_record} / {scraped_overall_record} / standing {scraped_standing}")
+
+        # Find candidate matches from sheet, preferring same conference when available
+        candidates = find_best_candidates(scraped_school, universities, top_n=10, preferred_conf=conf_name)
+        if not candidates:
+            print(f"No candidates found in sheet for '{scraped_school}'.")
+            # allow manual entry via interactive_confirm by passing empty list to show message
+            chosen = interactive_confirm(scraped_school, [], universities, scraped_conf=conf_name)
         else:
-            filtered_unis = universities
+            # Present filtered candidates (show top ones); allow interactive confirmation
+            chosen = interactive_confirm(scraped_school, candidates, universities, scraped_conf=conf_name)
 
-        # Build suggestions for all entries in this group
-        suggestions = []  # list of dicts: {idx,data,row,name,score}
-        for (global_idx, ent) in entries:
-            school = ent['school']
-            # find best candidate among filtered_unis
-            cand_list = find_best_candidates(school, filtered_unis, top_n=10)
-            if cand_list:
-                row, name, score = cand_list[0]
-                suggestions.append({'global_idx': global_idx, 'data': ent, 'row': row, 'name': name, 'score': score})
-            else:
-                suggestions.append({'global_idx': global_idx, 'data': ent, 'row': None, 'name': None, 'score': 0.0})
+        if not chosen:
+            print(f"No mapping confirmed for '{scraped_school}'; skipping update.")
+            continue
 
-        # Print all suggestions for this conference
-        print('\nSuggestions for conference', conf_name)
-        for i, s in enumerate(suggestions, start=1):
-            ent = s['data']
-            print(f"{i}) {ent['school']}  -> {s['name'] or 'NO SUGGESTION'} (score={s['score']:.3f})")
+        target_row, matched_name = chosen
+        print(f"Confirmed mapping: '{scraped_school}' -> sheet row {target_row}: {matched_name}")
 
-        # Allow user to correct multiple entries by index
-        to_correct = input("Enter comma-separated numbers to correct (or Enter to accept all): ").strip()
-        if to_correct:
-            indices = [int(x.strip()) for x in to_correct.split(',') if x.strip().isdigit()]
-            for ind in indices:
-                if not (1 <= ind <= len(suggestions)):
-                    print(f"Index {ind} out of range")
-                    continue
-                s = suggestions[ind-1]
-                ent = s['data']
-                print(f"Correcting {ent['school']}. Current suggestion: {s['name']} (score={s['score']:.3f})")
-                # Ask whether to restrict suggestions to mapped conference only
-                restrict = input("Restrict suggestions to mapped conference only? [Y/n]: ").strip().lower()
-                if restrict in ('', 'y', 'yes'):
-                    cand_source = filtered_unis
-                else:
-                    cand_source = universities
-                # build candidate list for this school among selected cand_source
-                cand_list = find_best_candidates(ent['school'], cand_source, top_n=10)
-                choice = interactive_confirm(ent['school'], cand_list, universities=cand_source, scraped_conf=mapped_sheet_conf)
-                if choice:
-                    chosen_row, chosen_name = choice
-                    s['row'] = chosen_row
-                    s['name'] = chosen_name
-                else:
-                    print('No selection made; leaving suggestion as-is')
+        # Prepare update payload using the standard column names (coerce to strings)
+        update_data = {
+            'conf_record': '' if scraped_conf_record is None else str(scraped_conf_record),
+            'overall_record': '' if scraped_overall_record is None else str(scraped_overall_record),
+            'standing': '' if scraped_standing is None else str(scraped_standing),
+        }
+        print(f"Writing to row {target_row}: {update_data}")
 
-        # After corrections, apply updates for each suggestion in order
-        for s in suggestions:
-            global_idx = s['global_idx']
-            ent = s['data']
-            chosen_row = s['row']
-            chosen_name = s['name']
-            if not chosen_row:
-                print(f"Skipping {ent['school']} (no matched row)")
-            else:
-                ok = update_university_record(ws_universities, chosen_row, ent, progress, progress_file)
-                if not ok:
-                    print('Aborting further writes due to write limit. Re-run after waiting or adjust SHEETS_WRITE_LIMIT.')
-                    return
+        # Perform the update (this will handle rate limits and pending writes)
+        ok = update_university_record(ws_universities, target_row, update_data, progress, progress_file)
+        if not ok:
+            print(f"Update for row {target_row} failed or was deferred (rate limit).")
+        # small pause to be polite
+        time.sleep(1)
 
-            # update progress
-            progress[page_key] = global_idx + 1
-            # mark this conference as completed (if not already)
-            completed = progress.get('completed_confs', {})
-            conf_list = completed.get(page_key, [])
-            if conf_name and conf_name not in conf_list:
-                conf_list.append(conf_name)
-                completed[page_key] = conf_list
-                progress['completed_confs'] = completed
-            try:
-                with open(progress_file, 'w') as f:
-                    json.dump(progress, f)
-            except Exception as e:
-                print('Warning: failed to write progress file:', e)
+    print('\nInteractive mapping complete.')
 
-    print('\nAll conferences processed.')
+# Helper: from a <tr> element, extract all th texts and the subset of "visible" ths
+# (those with class 'hide-on-medium-down'). Returns (all_texts, visible_texts, visible_positions)
+def _extract_visible_headers_from_tr(tr):
+    try:
+        ths = tr.xpath('./th')
+    except Exception:
+        return [], [], []
+    all_texts = [th.text_content().strip() for th in ths]
+    visible_positions = []
+    visible_texts = []
+    for pos, th in enumerate(ths):
+        cls = (th.get('class') or '')
+        if 'hide-on-medium-down' in cls:
+            visible_positions.append(pos)
+            visible_texts.append(th.text_content().strip())
+    # If none explicitly marked, exclude ones with 'hide-on-large'
+    if not visible_positions:
+        for pos, th in enumerate(ths):
+            cls = (th.get('class') or '')
+            if 'hide-on-large' in cls:
+                continue
+            visible_positions.append(pos)
+            visible_texts.append(th.text_content().strip())
+    return all_texts, visible_texts, visible_positions
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
