@@ -3,6 +3,10 @@ import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from playwright.sync_api import sync_playwright
+from geocode_utils import get_lat_long
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google.oauth2.service_account import Credentials
 
 URL = "https://exactsports.com/soccer/#tve-jump-1896baece7f"
 URLS = [
@@ -82,11 +86,11 @@ URLS = [
     "https://exactsports.com/events/2916/soccer/girls/x1-showcase-camp-san-francisco-girls-06-2025",
     "https://exactsports.com/events/3033/soccer/boys/x1-showcase-camp-san-francisco-boys-07-2025",
 ]
-GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
-COST_XPATH = "//*[@id='registration-widget']/div[2]/div[2]/div[2]/h1/span"
-ADDRESS_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
-REGISTRATION_LINK_XPATH = "//*[@id='registration-widget']/div[2]/div[1]/div[3]/a"
-OVERVIEW_TITLE_XPATH = "//*[@id='overview-container']"
+# GRADES_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[2]/p"
+# COST_XPATH = "//*[@id='registration-widget']/div[2]/div[2]/div[2]/h1/span"
+# ADDRESS_XPATH = "/html/body/section[1]/div[2]/div/div[2]/div[1]/div[2]/div[1]/div[3]/a"
+# REGISTRATION_LINK_XPATH = "//*[@id='registration-widget']/div[2]/div[1]/div[3]/a"
+# OVERVIEW_TITLE_XPATH = "//*[@id='overview-container']"
 
 SHEET_ID = os.getenv("SHEET_ID")
 if not SHEET_ID:
@@ -192,20 +196,71 @@ def create_dataframe_and_write_to_csv(data, output_file):
 
     return df
 
+def geocode_addresses_in_sheet(sheet_id, tab_name, start_row, end_row):
+    """
+    Geocodes addresses in a Google Sheet and writes the latitude and longitude results back to the sheet.
+
+    Args:
+        sheet_id (str): The ID of the Google Sheet.
+        tab_name (str): The name of the tab in the Google Sheet.
+        start_row (int): The starting row for geocoding (inclusive).
+        end_row (int): The ending row for geocoding (inclusive).
+    """
+    # Google Sheets setup
+    SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+    SERVICE_ACCOUNT_FILE = "cspscraping.json"  # Replace with your service account file path
+
+    credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = build("sheets", "v4", credentials=credentials)
+    sheet = service.spreadsheets()
+
+    # Read rows from the sheet
+    range_name = f"{tab_name}!A{start_row}:Z{end_row}"  # Adjust column range as needed
+    try:
+        result = sheet.values().get(spreadsheetId=sheet_id, range=range_name).execute()
+        rows = result.get("values", [])
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        rows = []
+
+    # Geocode addresses
+    for i, row in enumerate(rows):
+        if len(row) > 0:  # Ensure the row has data
+            address = row[0]  # Assuming the address is in the first column
+            lat, lng, city = get_lat_long(address)
+            rows[i].extend([lat, lng])
+
+    # Write results back to the spreadsheet
+    update_range = f"{tab_name}!AA{start_row}:AB{end_row}"  # Adjust column range for lat/long
+    try:
+        sheet.values().update(
+            spreadsheetId=sheet_id,
+            range=update_range,
+            valueInputOption="RAW",
+            body={"values": rows}
+        ).execute()
+        print("Geocoding complete. Results written back to the spreadsheet.")
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+
 def main():
     """
     Main function to create a DataFrame with one row per URL in URLS.
     Extracts address, grades, and cost for each URL and writes the DataFrame to a CSV file.
     """
-    data = []
-    for url in URLS:
+    # data = []
+    # for url in URLS:
         
-        # Print the URL being processed
-        print("Trying to extract data from:", url)
-        data.append(get_camp_data(url))
+    #     # Print the URL being processed
+    #     print("Trying to extract data from:", url)
+    #     data.append(get_camp_data(url))
 
-    output_file = "exact_sports_camps.csv"
-    df = create_dataframe_and_write_to_csv(data, output_file)
-    print(df)
+    # output_file = "exact_sports_camps.csv"
+    # df = create_dataframe_and_write_to_csv(data, output_file)
+    # print(df)
+
+    # Geocoding addresses for rows 244 to 267
+    geocode_addresses_in_sheet(SHEET_ID, TAB_NAME, 244, 267)
+
 if __name__ == "__main__":
     main()

@@ -4,19 +4,19 @@ import json
 import copy
 import os
 
-def get_llm_data(res, html_tag):
+def get_llm_data(res, html_tag=None):
     """
     Extracts structured data from the specified HTML tag in the response.
 
     Args:
         res: The HTTP response object.
-        html_tag: The HTML tag or tag with attributes to search for (e.g., "div", "div class='dt-box'").
+        html_tag: (Optional) The HTML tag or tag with attributes to search for (e.g., "div", "div class='dt-box'").
 
     Returns:
         list: A list of additional camps extracted from the response.
     """
     soup = BeautifulSoup(res.text, "html.parser")
-    text_blocks = soup.select(html_tag)  # Use CSS selectors for flexibility
+    text_blocks = soup.select(html_tag) if html_tag else soup.find_all()  # Use CSS selectors for flexibility
     for i, tag in enumerate(text_blocks[:2]):
         print(f"Block {i + 1}: {tag.text.strip()}")
     relevant_lines = []
@@ -25,7 +25,6 @@ def get_llm_data(res, html_tag):
         if tag.text:
             text = tag.text.strip()
             text_lower = text.lower()
-            # if any(keyword in text_lower for keyword in ["camp", "date", "session", "ages", "$", "–", "to", "through"]) or any(char.isdigit() for char in text_lower):
             relevant_lines.append(text)
 
     snippet = "\n".join(relevant_lines)[:5000]
@@ -41,18 +40,17 @@ def get_llm_data(res, html_tag):
 
     Fields:
     - event_name
+    - address
     - start_date
     - end_date
     - ages
     - cost
 
     Text:
-    """
     {snippet}
-    """
 
     Return only this format:
-    {{"event_name":"", "start_date": "", "end_date": "", "ages": "", "cost": ""}}
+    {{"event_name":"", "address": "", "start_date": "", "end_date": "", "ages": "", "cost": ""}}
 
     Even if the text does not contain all fields, return an empty string for those fields. Do not return any other text or explanation, just the JSON.
     """
@@ -62,7 +60,7 @@ def get_llm_data(res, html_tag):
         "Content-Type": "application/json"
     }
     payload = {
-        "model": "google/gemma-3n-e4b-it:free",
+        "model": "deepseek/deepseek-r1-0528-qwen3-8b:free",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2
     }
@@ -70,6 +68,7 @@ def get_llm_data(res, html_tag):
     addl_camps = []
     camp = {
         "Event Details": "",
+        "address": "",
         "start_date": "",
         "end_date": "",
         "Ages / Grade Level": "",

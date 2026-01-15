@@ -103,3 +103,7 @@ def write_csv(camps, filename="nike_soccer_camps_all_states.csv"):
     with open(filename, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
+
+camps = scrape_state_camps()
+write_csv(camps)
+print(f"Scraped {len(camps)} Nike soccer camps. Data saved to 'nike_soccer_camps_all_states.csv'.")
