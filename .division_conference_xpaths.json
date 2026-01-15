@@ -495,7 +495,7 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 2,
+          "conf_record": 3,
           "overall_record": 7
         },
         "header_row": 0,
@@ -996,6 +996,260 @@
           "Overall": "overall_record"
         }
       }
+    },
+    "NAIA": {
+      "American Midwest": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/American_Midwest/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Appalachian Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Appalachian/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "California Pacific": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/California_Pacific/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Cascade Collegiate": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Cascade/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Chicagoland Collegiate": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Chicagoland/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Continental Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Continental/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Crossroads League": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Crossroads/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Great Southwest": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Great_Southwest/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Great Plains": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Great_Plains/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Heart of America Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Heart_of_America/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Kansas Collegiate Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/KCAC/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Mid-South Conf": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Mid-South/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Red River": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Red_River/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "River States": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/River_States/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Sooner Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Sooner/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Southern States Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Southern_States/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "The Sun Conference": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/The_Sun/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Wolverine-Hoosier Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/msoc/2025-26/conf/Wolverine-Hoosier/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      }
     }
   },
   "women": {
@@ -1359,6 +1613,12 @@
           "conf_record": 3,
           "overall_record": 5,
           "pts": 1
+        },
+        "header_row": 0,
+        "col_map": {
+          "SCHOOL": "school",
+          "NESCAC": "conf_record",
+          "OVERALL": "overall_record"
         }
       },
       "Heartland": {
@@ -1371,9 +1631,15 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 2,
+          "conf_record": 1,
           "overall_record": 3,
           "pts": 1
+        },
+        "header_row": 0,
+        "col_map": {
+          "SCHOOL": "school",
+          "CONF": "conf_record",
+          "OVERALL": "overall_record"
         }
       },
       "Collegiate Conference of the South": {
@@ -1386,9 +1652,15 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 2,
+          "conf_record": 1,
           "overall_record": 4,
           "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Minnesota Intercollegiate": {
@@ -1404,6 +1676,12 @@
           "conf_record": 2,
           "overall_record": 4,
           "pts": 1
+        },
+        "header_row": 0,
+        "col_map": {
+          "Team": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "College Conference of Illinois & Wisconsin": {
@@ -1416,9 +1694,15 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 2,
+          "conf_record": 1,
           "overall_record": 4,
           "pts": 1
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "CCIW": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Northern Athletic Collegiate": {
@@ -1434,6 +1718,12 @@
           "conf_record": 2,
           "overall_record": 7,
           "pts": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "NACC": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Southern Collegiate": {
@@ -1445,8 +1735,12 @@
         "col_map_indices": {
           "school": 0,
           "conf_record": 2,
-          "overall_record": 9,
-          "pts": 4
+          "overall_record": 9
+        },
+        "header_row": 1,
+        "col_map": {
+          "": "school",
+          "Record": "overall_record"
         }
       },
       "Old Dominion Athletic": {
@@ -1459,9 +1753,15 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 2,
+          "conf_record": 3,
           "overall_record": 7,
           "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "ODAC Record": "conf_record",
+          "Overall Record": "overall_record"
         }
       },
       "New England Men's and Women's": {
@@ -1477,6 +1777,12 @@
           "conf_record": 2,
           "overall_record": 6,
           "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Ohio Athletic": {
@@ -1489,9 +1795,14 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 1,
-          "overall_record": 4,
-          "pts": 2
+          "conf_record": 3,
+          "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "OAC Rec": "conf_record",
+          "Overall Rec": "overall_record"
         }
       },
       "Liberty League": {
@@ -1507,6 +1818,12 @@
           "conf_record": 1,
           "overall_record": 4,
           "pts": 2
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "City University of New York Athletic Conference": {
@@ -1522,6 +1839,12 @@
           "conf_record": 1,
           "overall_record": 4,
           "pts": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "CUNYAC": "conf_record",
+          "Overal": "overall_record"
         }
       },
       "Midwest Conference": {
@@ -1537,6 +1860,12 @@
           "conf_record": 1,
           "pts": 2,
           "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Southern Athletic": {
@@ -1552,6 +1881,12 @@
           "conf_record": 2,
           "pts": 1,
           "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "SCHOOL": "school",
+          "SAA": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Upper Midwest Athletic": {
@@ -1567,6 +1902,12 @@
           "conf_record": 2,
           "pts": 1,
           "overall_record": 3
+        },
+        "header_row": 0,
+        "col_map": {
+          "Team": "school",
+          "UMAC": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "St. Louis Intercollegiate": {
@@ -1582,6 +1923,12 @@
           "conf_record": 1,
           "pts": 3,
           "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School Name With Logo (link to Schedule)": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "University Athletic Association": {
@@ -1597,6 +1944,12 @@
           "conf_record": 2,
           "pts": 1,
           "overall_record": 5
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "USA South": {
@@ -1611,6 +1964,11 @@
           "conf_record": 3,
           "pts": 2,
           "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         }
       },
       "Massachusetts State Collegiate": {
@@ -1623,8 +1981,12 @@
         "col_map_indices": {
           "school": 0,
           "conf_record": 3,
-          "pts": 1,
           "overall_record": 6
+        },
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L": "overall_record"
         }
       },
       "United East": {
@@ -1640,6 +2002,12 @@
           "conf_record": 3,
           "pts": 2,
           "overall_record": 7
+        },
+        "header_row": 0,
+        "col_map": {
+          "TEAM": "school",
+          "Conf": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "American Rivers": {
@@ -1655,6 +2023,12 @@
           "conf_record": 2,
           "pts": 1,
           "overall_record": 4
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "A-R-C": "conf_record",
+          "Overall": "overall_record"
         }
       },
       "Southern California Intercollegiate": {
@@ -1667,201 +2041,269 @@
         },
         "col_map_indices": {
           "school": 0,
-          "conf_record": 3,
-          "pts": 2,
-          "overall_record": 7
-        }
-      },
-      "Landmark Conference": {
-        "url": "https://landmarkconference.org/sports/wsoc/standings",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "TEAM": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 3,
+          "conf_record": 2,
           "pts": 2,
           "overall_record": 6
+        },
+        "header_row": 0,
+        "col_map": {
+          "School": "school",
+          "CONF. W-L": "conf_record",
+          "W-L": "overall_record"
         }
-      },
-      "Atlantic East": {
-        "url": "https://atlanticeast.com/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOLS": "school",
-          "AEC RECORD": "conf_record",
-          "OVERALL RECORD": "overall_record"
+      }
+    },
+    "NAIA": {
+      "American Midwest": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/American_Midwest/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         },
         "col_map_indices": {
           "school": 0,
           "conf_record": 1,
-          "pts": 6,
-          "overall_record": 3
+          "overall_record": 4
         }
       },
-      "Coast to Coast": {
-        "url": "https://www.c2csports.com/sports/wsoc/2025-26/standings",
-        "xpath": "/html/body/main/div/div[1]/div[2]/div[2]/div/table",
-        "col_map_names": {
-          "W-L": "overall_record"
+      "Appalachian Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Appalachian/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         },
         "col_map_indices": {
           "school": 0,
-          "pts": 2,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "California Pacific": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/California_Pacific/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Cascade Collegiate": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Cascade/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Chicagoland Collegiate": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Chicagoland/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Continental Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Continental/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Crossroads League": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Crossroads/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Great Southwest": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Great_Southwest/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Great Plains": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Great_Plains/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Heart of America Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Heart_of_America/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Kansas Collegiate Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/KCAC/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Mid-South Conf": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Mid-South/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "Red River": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Red_River/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 1,
+          "overall_record": 4
+        }
+      },
+      "River States": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/River_States/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
+        },
+        "col_map_indices": {
+          "school": 0,
+          "conf_record": 4,
           "overall_record": 1
         }
       },
-      "Conf of New England": {
-        "url": "https://cnesports.org/sports/wsoc/2022-23/standings",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
+      "Sooner Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Sooner/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         },
         "col_map_indices": {
           "school": 0,
           "conf_record": 1,
-          "pts": 5,
-          "overall_record": 3
-        }
-      },
-      "North Coast Athletic": {
-        "url": "https://northcoast.org/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 2,
-          "pts": 1,
           "overall_record": 4
         }
       },
-      "Centennial": {
-        "url": "https://centennial.org/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CENTENNIAL": "conf_record",
-          "OVERALL": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 3,
-          "pts": 1,
-          "overall_record": 5
-        }
-      },
-      "American Southwest": {
-        "url": "https://ascsports.org/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
+      "Southern States Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Southern_States/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         },
         "col_map_indices": {
           "school": 0,
           "conf_record": 1,
-          "pts": 2,
-          "overall_record": 3
+          "overall_record": 4
         }
       },
-      "Little East Conf": {
-        "url": "https://littleeast.com/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 2,
-          "pts": 1,
-          "overall_record": 5
-        }
-      },
-      "Skyline": {
-        "url": "https://skylineconference.org/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
+      "The Sun Conference": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/The_Sun/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         },
         "col_map_indices": {
           "school": 0,
           "conf_record": 1,
-          "pts": 3,
           "overall_record": 4
         }
       },
-      "Northwest Conf": {
-        "url": "https://nwcsports.com/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 2,
-          "pts": 1,
-          "overall_record": 4
-        }
-      },
-      "North Atlantic": {
-        "url": "https://nacathletics.com/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "INSTITUTION": "school",
-          "C-REC": "conf_record",
-          "O-REC": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 3,
-          "pts": 1,
-          "overall_record": 6
-        }
-      },
-      "New Jersey Athletic": {
-        "url": "https://njacsports.com/standings.aspx?standings=315",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "CONF": "conf_record",
-          "OVERALL": "overall_record"
-        },
-        "col_map_indices": {
-          "school": 0,
-          "conf_record": 2,
-          "pts": 1,
-          "overall_record": 4
-        }
-      },
-      "Wisconsin Intercollegiate": {
-        "url": "https://wiacsports.com/standings.aspx?path=wsoc",
-        "xpath": "/html/body/form/main/article/div[3]/table",
-        "col_map_names": {
-          "SCHOOL": "school",
-          "WIAC": "conf_record",
-          "OVERALL": "overall_record"
+      "Wolverine-Hoosier Athletic": {
+        "url": "https://naiastats.prestosports.com/sports/wsoc/2025-26/conf/Wolverine-Hoosier/standings",
+        "xpath": "/html/body/main/div/div[1]/div/div/div[2]/div/table",
+        "header_row": 1,
+        "col_map": {
+          "Team": "school",
+          "W-L-T": "overall_record"
         },
         "col_map_indices": {
           "school": 0,
           "conf_record": 1,
-          "pts": 2,
-          "overall_record": 3
+          "overall_record": 4
         }
       }
     }

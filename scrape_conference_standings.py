@@ -668,6 +668,8 @@ def main():
         division_label = 'Division 2'
     elif division == 'd3':
         division_label = 'Division 3'
+    elif division == 'naia':
+        division_label = 'NAIA'
 
     print("Checking JSON file for", division_label, "conference xpaths...")
     # For D2/D3, prefer per-conference scrapes defined in JSON; D1 remains TopDrawerSoccer only
@@ -740,10 +742,24 @@ def main():
                 # removed stray try: directly import and parse with lxml
                 from lxml import html as lxml_html
                 tree = lxml_html.fromstring(txt)
+                print(f"Applying XPath '{xpath}' for conference '{conf_name}'")
+                print(tree[0:100])
                 nodes = tree.xpath(xpath)
-                if not nodes:
-                    print(f"XPath returned no nodes for conference '{conf_name}' at {url}")
-                    continue
+                # If the xpath returned no nodes or only non-table nodes (e.g., head/body),
+                # try fallbacks that search for tables under <main> or any <table>.
+                def _is_non_table_node(n):
+                    try:
+                        return getattr(n, 'tag', '') in ('head', 'body')
+                    except Exception:
+                        return False
+                if not nodes or all(_is_non_table_node(n) for n in nodes) or not any(getattr(n, 'tag', '') == 'table' for n in nodes):
+                    alt_nodes = tree.xpath('//main//table') or tree.xpath('//table')
+                    if alt_nodes:
+                        print(f"XPath returned no table nodes for conference '{conf_name}'; falling back to //main//table or //table (found {len(alt_nodes)} tables).")
+                        nodes = alt_nodes
+                    else:
+                        print(f"XPath returned no nodes for conference '{conf_name}' at {url}")
+                        continue
 
                 # Determine whether this conference page is Sidearm-powered early so header
                 # detection can use the appropriate visible/th exclusion rules.
@@ -832,9 +848,19 @@ def main():
                                 # Collect data rows following the chosen header row so we have sample rows
                                 rows = []
                                 for data_tr in trs[best_idx+1:]:
-                                    data_tds = [td.text_content().strip() for td in data_tr.xpath('./td')]
-                                    if data_tds:
-                                        rows.append(data_tds)
+                                    data_nodes = data_tr.xpath('./th|./td')
+                                    # Align data cells with header_nodes positions. If a data row
+                                    # lacks a leading <th> (common on PrestoSports), pad with ''
+                                    # so indices correspond to header_nodes positions.
+                                    row_cells = []
+                                    for i in range(len(header_nodes)):
+                                        if i < len(data_nodes):
+                                            row_cells.append(data_nodes[i].text_content().strip())
+                                        else:
+                                            row_cells.append('')
+                                    # skip empty rows
+                                    if any(c for c in row_cells):
+                                        rows.append(row_cells)
                                 # Determine visible header positions among all header nodes. Prefer
                                 # nodes with class 'hide-on-medium-down' when present (Sidearm).
                                 visible_positions = []
@@ -893,8 +919,18 @@ def main():
                                 header_row_idx = 0
                         data_trs = trs[(header_row_idx + 1) if header_row_idx is not None else 1:]
                         for tr in data_trs:
-                            cells = [td.text_content().strip() for td in tr.xpath('./td')]
-                            rows.append(cells)
+                            data_nodes = tr.xpath('./th|./td')
+                            # If header_cells exists, align data to its length
+                            if header_cells:
+                                row_cells = []
+                                for i in range(len(header_cells)):
+                                    if i < len(data_nodes):
+                                        row_cells.append(data_nodes[i].text_content().strip())
+                                    else:
+                                        row_cells.append('')
+                            else:
+                                row_cells = [n.text_content().strip() for n in data_nodes]
+                            rows.append(row_cells)
 
                 # If header_cells not detected, try to infer by length from first row
                 if header_cells is None and rows:
@@ -929,6 +965,43 @@ def main():
                     for i_h, hname in enumerate(hdr):
                         print(f" {i_h}) {hname}")
 
+                    # Special-case NAIA Prestosports pages: team name is often in a
+                    # leading <th> while other columns are <td>. Users commonly think
+                    # in terms of data columns where 0=team, 1=first-td, 2=second-td, etc.
+                    naia_flag = False
+                    try:
+                        if url and 'naiastats.prestosports.com' in url:
+                            naia_flag = True
+                    except Exception:
+                        naia_flag = False
+
+                    # Build list of header node tags if available to support NAIA mapping
+                    header_node_tags = []
+                    try:
+                        # attempt to import lxml for any potential re-parsing if needed
+                        from lxml import html as lxml_html  # noqa: F401
+                    except Exception:
+                        pass
+
+                    # Compute td-only positions among hdr when possible
+                    td_positions = []
+                    try:
+                        # if header_nodes variable available (from xpath parsing), use it
+                        if 'header_nodes' in locals():
+                            for pos, node in enumerate(header_nodes):
+                                ttag = getattr(node, 'tag', '')
+                                if ttag == 'td':
+                                    td_positions.append(pos)
+                        else:
+                            # fallback: assume first header may be th and the rest are td
+                            if hdr:
+                                td_positions = list(range(1, len(hdr)))
+                    except Exception:
+                        td_positions = list(range(1, len(hdr)))
+
+                    if naia_flag and td_positions:
+                        print('\nNOTE: This appears to be an NAIA PrestoSports page. For mapping, enter indices where: 0 = team (<th>), 1 = first data column (<td>), 2 = second <td>, etc.')
+
                     def prompt_idx(prompt_text, allow_blank=False):
                         while True:
                             ans = input(prompt_text).strip()
@@ -936,8 +1009,18 @@ def main():
                                 return None
                             if ans.isdigit():
                                 v = int(ans)
-                                if 0 <= v < len(hdr):
-                                    return v
+                                # If NAIA Prestosports: interpret 0 as first header (<th>),
+                                # and values >=1 as indices into the td_positions list (1 -> first td).
+                                if naia_flag and td_positions:
+                                    if v == 0:
+                                        return 0
+                                    # map v (1-based for td) to the actual header position
+                                    td_idx = v - 1
+                                    if 0 <= td_idx < len(td_positions):
+                                        return td_positions[td_idx]
+                                else:
+                                    if 0 <= v < len(hdr):
+                                        return v
                             print(f"Enter a number between 0 and {len(hdr)-1}{', or blank' if allow_blank else ''}.")
 
                     s_idx = prompt_idx(' School column index (0-based): ')
@@ -1001,7 +1084,7 @@ def main():
                             except Exception:
                                 pass
 
-                # If still no col_map, attempt auto-mapping by keywords over VISIBLE headers and finally fall back
+                # If still no col_map, attempt auto-mapping by keywords over VISIBLE headers first
                 if not col_map and header_cells:
                     # build visible lists
                     visible_positions = header_visible_positions or list(range(len(hdr)))
@@ -1111,6 +1194,50 @@ def main():
                                 json.dump(div_xpaths, f, indent=2)
                         except Exception:
                             pass
+
+                # Ensure we have explicit col_map_indices when possible so duplicate header names
+                # don't cause ambiguous mappings. If col_map exists but col_map_indices is empty,
+                # try to resolve header-name -> index mapping. Prompt user only when a header
+                # name occurs multiple times so we can disambiguate.
+                try:
+                    existing_indices = info.get('col_map_indices') or {}
+                    if (not existing_indices) and col_map and hdr:
+                        computed_indices = {}
+                        for hname, field in list(col_map.items()):
+                            # find all header positions matching this header name (case-insensitive)
+                            matches = [i for i, h in enumerate(hdr) if (h or '').strip().lower() == (hname or '').strip().lower()]
+                            if len(matches) == 1:
+                                computed_indices[field] = matches[0]
+                            elif len(matches) > 1:
+                                # Ask user to disambiguate which occurrence to use
+                                print(f"Header name '{hname}' appears multiple times for conference '{conf_name}':")
+                                for m in matches:
+                                    print(f" {m}) {hdr[m]}")
+                                ans = None
+                                while True:
+                                    pick = input(f"Choose 0-based index for field '{field}' (or Enter to skip mapping this field): ").strip()
+                                    if pick == '':
+                                        break
+                                    if pick.isdigit() and int(pick) in matches:
+                                        ans = int(pick)
+                                        break
+                                    print(f"Enter one of: {matches}, or blank to skip.")
+                                if ans is not None:
+                                    computed_indices[field] = ans
+                        # If we found any indices, persist them into info and save JSON
+                        if computed_indices:
+                            # merge into existing structure
+                            col_map_indices = info.get('col_map_indices') or {}
+                            col_map_indices.update(computed_indices)
+                            info['col_map_indices'] = col_map_indices
+                            try:
+                                with open(div_xpath_file, 'w', encoding='utf-8') as f:
+                                    json.dump(div_xpaths, f, indent=2)
+                                print(f"Saved computed col_map_indices for '{conf_name}' to {div_xpath_file}: {computed_indices}")
+                            except Exception:
+                                print('Failed to persist computed col_map_indices to JSON file')
+                except Exception:
+                    pass
 
                 # Detect PTS/Points column index if present in headers
                 pts_col_idx = None
