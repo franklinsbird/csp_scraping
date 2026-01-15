@@ -43,8 +43,7 @@ function importScholarshipsLLM() {
 
   const processed = loadProcessedSet_(ss);
   const threads = GmailApp.search(`label:${LABEL_NAME} newer_than:1y`, 0, 500);
-
-  const rows = [];
+  let written = 0;
   threads.forEach(t => {
     t.getMessages().forEach(msg => {
       const emailId = msg.getId();
@@ -62,15 +61,14 @@ function importScholarshipsLLM() {
 
       // LLM extraction
       const items = extractWithLLM_(subject, body);
-
-      // Append rows
+      // Append each row immediately so progress is saved even if timeout occurs
       (items || []).forEach(obj => {
         const title = safe(obj.title);
         if (!title) return;
         const key = `${emailId}|${title}`;
         if (processed.has(key)) return;
 
-        rows.push([
+        const row = [
           title,
           safe(obj.sponsor),
           safe(obj.amount),
@@ -82,19 +80,22 @@ function importScholarshipsLLM() {
           safe(obj.type),
           safe(obj.location),
           safe(obj.application_window)
-        ]);
-        processed.add(key);
+        ];
+
+        try {
+          sheet.getRange(sheet.getLastRow() + 1, 1, 1, HEADERS.length).setValues([row]);
+          written++;
+          processed.add(key);
+          // Persist the processed key incrementally to avoid duplicates on rerun
+          appendProcessedKeys_(ss, [key]);
+        } catch (e) {
+          Logger.log('Failed to append row for key ' + key + ': ' + e);
+        }
       });
     });
   });
 
-  if (rows.length) {
-    const sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
-    sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, HEADERS.length).setValues(rows);
-    saveProcessedSet_(SpreadsheetApp.getActive(), processed);
-  }
-
-  SpreadsheetApp.getUi().alert(`Imported ${rows.length} row(s).`);
+  SpreadsheetApp.getUi().alert(`Imported ${written} row(s).`);
 }
 
 /* ----- Debug: run on just 1 email so you can see output in Logs ----- */
@@ -337,6 +338,15 @@ function saveProcessedSet_(ss, setObj) {
   p.getRange(1, 1).setValue('emailId|title');
   const arr = Array.from(setObj).map(k => [k]);
   if (arr.length) p.getRange(2, 1, arr.length, 1).setValues(arr);
+}
+
+// Append new processed keys without rewriting the entire sheet
+function appendProcessedKeys_(ss, keys) {
+  if (!keys || !keys.length) return;
+  const p = ss.getSheetByName(PROCESSED_SHEET);
+  const start = p.getLastRow() + 1;
+  const rows = keys.map(k => [k]);
+  p.getRange(start, 1, rows.length, 1).setValues(rows);
 }
 
 function htmlToText_(html) {
